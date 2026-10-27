@@ -1,0 +1,34 @@
+diff --git a/ofa/utils/common_tools.py b/ofa/utils/common_tools.py
+index 9d63b4a..e15b98b 100644
+--- a/ofa/utils/common_tools.py
++++ b/ofa/utils/common_tools.py
+@@ -97,7 +97,8 @@ def val2list(val, repeat_time=1):
+ 
+ def download_url(url, model_dir='~/.torch/', overwrite=False):
+ 	target_dir = url.split('/')[-1]
+-	model_dir = os.path.expanduser(model_dir)
++	model_dir = os.environ.get('TINYTL_CACHE', os.path.expanduser(model_dir))
++	url = url.replace('https://hanlab.mit.edu/', 'https://hanlab18.mit.edu/')
+ 	try:
+ 		if not os.path.exists(model_dir):
+ 			os.makedirs(model_dir)
+@@ -109,7 +110,7 @@ def download_url(url, model_dir='~/.torch/', overwrite=False):
+ 		return cached_file
+ 	except Exception as e:
+ 		# remove lock file so download can be executed next time.
+-		os.remove(os.path.join(model_dir, 'download.lock'))
++		raise RuntimeError('Download failed: ' + url) from e
+ 		sys.stderr.write('Failed to download from url %s' % url + '\n' + str(e) + '\n')
+ 		return None
+ 
+diff --git a/ofa/utils/my_dataloader/__init__.py b/ofa/utils/my_dataloader/__init__.py
+index c3b06c3..8989a06 100644
+--- a/ofa/utils/my_dataloader/__init__.py
++++ b/ofa/utils/my_dataloader/__init__.py
+@@ -1,4 +1,4 @@
+-from .my_data_loader import *
+-from .my_data_worker import *
++# Fixed-resolution TinyTL uses the supported PyTorch DataLoader.
++from torch.utils.data import DataLoader as MyDataLoader
+ from .my_distributed_sampler import *
+ from .my_random_resize_crop import *

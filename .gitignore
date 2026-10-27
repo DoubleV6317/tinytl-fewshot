@@ -1,0 +1,20 @@
+# Environment and downloaded assets (install-environment.cmd, prepare.py, prepare_aircraft.py)
+/.venv/
+__pycache__/
+/cache/
+/data/
+/fewshot/
+/fewshot_aircraft/
+
+# Official mit-han-lab/tinyml checkout with our patches applied; see README.md
+/upstream/
+
+# Per-run console logs, configs and weights; only each run's result.json is kept
+/logs/
+/runs/.sweep.lock/
+/runs/*smoke*/
+/runs/*/*
+!/runs/*/result.json
+*.pth
+*.pth.tar
+*.stderr.log

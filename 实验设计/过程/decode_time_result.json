@@ -1,0 +1,10 @@
+{
+ "flowers/None": 5.19,
+ "flowers/torch": 9.09,
+ "air_1.3MP(1400x950)/None": 13.62,
+ "air_1.3MP(1400x950)/torch": 17.26,
+ "air_2.7MP(2000x1350)/None": 23.73,
+ "air_2.7MP(2000x1350)/torch": 27.69,
+ "air_prep(754x512)/None": 7.03,
+ "air_prep(754x512)/torch": 10.3
+}

@@ -1,0 +1,122 @@
+
+=== H1 flowers102: 45 / 45 main runs done ===
+pairing ok: subset and head-init hashes equal across arms per seed; quantized weights equal across seeds
+diverged: none | code versions: 1 | LRs: {'LB': 0.0008, 'T3': 0.0008, 'T4': 0.0008, 'last': 0.0008, 'T2': 0.0008}
+
+per arm: test top-1 mean +- sd | final val | final train | measured MiB at b8 (profiler MB)
+  LB   n=10 test  85.03 +- 0.80  val  87.29  train  99.9   557.2 MiB (37.1 MB)
+  T3   n=10 test  85.46 +- 0.82  val  87.95  train  99.9   168.6 MiB (36.0 MB)
+  T4   n=10 test  85.00 +- 0.60  val  87.25  train  99.9   105.2 MiB (34.6 MB)
+  last n=10 test  78.89 +- 0.49  val  81.56  train  99.8    67.4 MiB (30.8 MB)
+  T2   n= 5 test  85.16 +- 0.51  val  87.39  train  99.8   226.5 MiB (36.8 MB)
+
+paired d = arm - LB on test (pp), margin 2
+  T3   n=10 d=+0.43 sd=0.56 93% CI [+0.07, +0.80]  retains                              NI p=0.0000  per seed: -0.5 +0.1 +0.5 +0.3 +0.7 +0.4 -0.3 +1.0 +1.1 +1.0
+  T4   n=10 d=-0.03 sd=0.63 93% CI [-0.44, +0.38]  retains                              NI p=0.0000  per seed: -0.6 -0.9 +0.2 -0.0 +0.4 -0.5 -0.5 +1.1 -0.2 +0.7
+  last n=10 d=-6.14 sd=0.54 93% CI [-6.49, -5.79]  inferior by more than the margin     NI p=1.0000  per seed: -6.1 -6.7 -5.4 -6.0 -6.3 -7.2 -6.4 -5.6 -6.2 -5.5
+  T2   n=5 d=+0.33 sd=0.37 93% CI [-0.08, +0.73]  retains                              NI p=0.0001 (exploratory)  per seed: +0.0 -0.0 +0.2 +0.6 +0.8
+Holm over the retains claims of ['T3', 'T4', 'last'], one-sided alpha 0.035:
+  T3   p=0.0000 vs 0.0117 -> retains (Holm)
+  T4   p=0.0000 vs 0.0175 -> retains (Holm)
+  last p=1.0000 vs 0.0350 -> retains not confirmed after Holm
+val-split d (same seeds), for agreement with test: T3 +0.66 T4 -0.05 last -5.74 T2 +0.33
+prior (TinyTrain Table 6) vs observed d: T3 -1.0/+0.43 T4 -1.9/-0.03 last -0.7/-6.14 T2 -0.8/+0.33
+half-budget gain on main seeds (val {45,50} - {20,25}): LB 1.93 T3 1.87 T4 1.37 last 1.63 T2 1.90
+GPU time: 4.1 h over 45 runs
+
+[flowers102] half-budget check did not fire
+
+=== H1 aircraft: 29 / 29 main runs done ===
+pairing ok: subset and head-init hashes equal across arms per seed; quantized weights equal across seeds
+diverged: none | code versions: 1 | LRs: {'LB': 0.0004, 'T3': 0.0004, 'T4': 0.0004, 'last': 0.0016, 'T2': 0.0004}
+
+per arm: test top-1 mean +- sd | final val | final train | measured MiB at b8 (profiler MB)
+  LB   n= 6 test  25.74 +- 1.05  val  26.90  train  99.5   557.2 MiB (37.1 MB)
+  T3   n= 6 test  25.53 +- 0.57  val  26.33  train  99.2   168.6 MiB (36.0 MB)
+  T4   n= 6 test  25.42 +- 0.45  val  25.37  train  99.1   105.2 MiB (34.6 MB)
+  last n= 5 test  22.09 +- 0.84  val  23.48  train  92.0    67.4 MiB (30.8 MB)
+  T2   n= 6 test  25.47 +- 0.99  val  26.70  train  99.3   226.5 MiB (36.8 MB)
+
+paired d = arm - LB on test (pp), margin 2
+  T3   n=6 d=-0.21 sd=0.63 93% CI [-0.80, +0.38]  retains                              NI p=0.0005  per seed: +0.1 -1.0 +0.0 -1.0 +0.3 +0.3
+  T4   n=6 d=-0.32 sd=0.77 93% CI [-1.05, +0.41]  retains                              NI p=0.0016  per seed: -0.2 -0.7 -0.9 -1.3 +0.5 +0.6
+  last n=5 d=-3.94 sd=0.75 93% CI [-4.77, -3.12]  inferior by more than the margin     NI p=0.9978  per seed: -3.2 -3.3 -4.9 -4.6 -3.8
+  T2   n=6 d=-0.28 sd=0.21 93% CI [-0.47, -0.08]  retains                              NI p=0.0000 (exploratory)  per seed: -0.4 -0.4 -0.4 -0.4 +0.2 -0.3
+Holm over the retains claims of ['T3', 'T4', 'last'], one-sided alpha 0.035:
+  T3   p=0.0005 vs 0.0117 -> retains (Holm)
+  T4   p=0.0016 vs 0.0175 -> retains (Holm)
+  last p=0.9978 vs 0.0350 -> retains not confirmed after Holm
+val-split d (same seeds), for agreement with test: T3 -0.57 T4 -1.53 last -3.80 T2 -0.20
+prior (TinyTrain Table 6) vs observed d: T3 -3.1/-0.21 T4 -10.6/-0.32 last -17.6/-3.94 T2 -2.6/-0.28
+half-budget gain on main seeds (val {45,50} - {20,25}): LB 0.73 T3 0.68 T4 0.92 last 2.72 T2 1.22
+GPU time: 4.0 h over 29 runs
+
+[aircraft] half-budget check: last at lr 0.0016, seed 100: val 22.60 at 50 epochs -> 22.90 at 100 epochs (+0.30 pp); test 21.42 -> 21.84. Within the 100-epoch run, val at epoch 50 = 20.30.
+  -> under 1 pp: no budget label
+
+=== H2 aircraft: 5 / 5 batch-1 runs (LB at lr 0.0003) ===
+LB-b1 test 24.99 +- 2.48, val 25.52, train 99.3; measured 122.1 MiB vs LB-b8 557.2 MiB
+H2  d = LB-b1 - LB-b8: n=5 d=-1.04 sd=2.06 93% CI [-3.31, +1.22]  per seed -4.4 +0.1 -1.4 -0.4 +0.9
+    primary: not catastrophic; secondary: not shown within 2 pp
+H2b d = LB-b1 (122.1 MiB) - T4-b8 (105.2 MiB): n=5 d=-0.55 sd=2.15 93% CI [-2.91, +1.81] -> tie (goes to T4)
+conditional 2 did not fire (d_b1 point estimate >= -2 pp)
+
+=== cross-domain contrast d_Aircraft - d_Flowers (Welch, 93%) ===
+  T3   -0.64 [-1.28, -0.01] (df 9.7; prior -2.1)
+  T4   -0.29 [-1.06, +0.48] (df 9.0; prior -8.7)
+  last +2.20 [+1.37, +3.02] (df 6.2; prior -16.9)
+  T2   -0.60 [-1.01, -0.19] (df 6.1; prior -1.8)
+
+=== post-hoc metrics for the story's purpose (NOT pre-registered; k=5) ===
+
+[flowers102]
+retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
+  T2    n= 5 R 105.3% [101.0, 109.9]  (LB - last on these seeds: 6.09 pp)
+  T3    n=10 R 107.0% [101.9, 112.1]  (LB - last on these seeds: 6.14 pp)
+  T4    n=10 R  99.5% [ 94.3, 105.4]  (LB - last on these seeds: 6.14 pp)
+train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
+  LB    n=10 gap  14.8 +- 0.8 pp
+  T2    n= 5 gap  14.7 +- 0.5 pp   vs LB -0.33 [-0.73, +0.08]
+  T3    n=10 gap  14.5 +- 0.9 pp   vs LB -0.37 [-0.70, -0.04]
+  T4    n=10 gap  14.9 +- 0.7 pp   vs LB +0.11 [-0.33, +0.54]
+  last  n=10 gap  20.9 +- 0.4 pp   vs LB +6.06 [+5.70, +6.42]
+best configuration within a training-memory budget (measured PyTorch peak MiB; d = config - LB-b8, paired; "tied" = paired 93% CI of the difference to the best includes 0):
+  <= 64 MiB  nothing fits (smallest: last at 67.4 MiB)
+  <= 96 MiB  best last  ( 67.4 MiB) test 78.89, d -6.14 | tied: none | TinyTL fits as: nothing
+  <= 128 MiB best T4    (105.2 MiB) test 85.00, d -0.03 | tied: none | TinyTL fits as: nothing
+  <= 192 MiB best T3    (168.6 MiB) test 85.46, d +0.43 | tied: none | TinyTL fits as: nothing
+  <= 256 MiB best T3    (168.6 MiB) test 85.46, d +0.43 | tied: T2 | TinyTL fits as: nothing
+  <= 512 MiB best T3    (168.6 MiB) test 85.46, d +0.43 | tied: T2 | TinyTL fits as: nothing
+  no budget  best T3    (168.6 MiB) test 85.46, d +0.43 | tied: T2 | TinyTL fits as: LB (d +0.00)
+cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
+  <= 128 MiB  arms T4/last, n=10: per-seed oracle 85.00 | best fixed arm T4 85.00 | deepest-that-fits T4 85.00 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:10
+  <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 85.22 | best fixed arm T2 85.16 | deepest-that-fits T2 85.16 | headroom over best fixed 0.07 pp, over deepest 0.07 pp | per-seed winners T2:3 T3:2
+  no budget   arms LB/T2/T3/T4/last, n=5: per-seed oracle 85.22 | best fixed arm T2 85.16 | deepest-that-fits LB 84.83 | headroom over best fixed 0.07 pp, over deepest 0.39 pp | per-seed winners T2:3 T3:2
+
+[aircraft]
+retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
+  T2    n= 5 R  93.2% [ 89.0,  98.3]  (LB - last on these seeds: 3.94 pp)
+  T3    n= 5 R  92.1% [ 79.4, 103.8]  (LB - last on these seeds: 3.94 pp)
+  T4    n= 5 R  87.4% [ 77.0, 100.9]  (LB - last on these seeds: 3.94 pp)
+  LB-b1 n= 5 R  73.5% [ 24.0, 107.0]  (LB - last on these seeds: 3.94 pp)
+train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
+  LB    n= 6 gap  73.7 +- 0.8 pp
+  T2    n= 6 gap  73.8 +- 0.8 pp   vs LB +0.08 [-0.39, +0.54]
+  T3    n= 6 gap  73.6 +- 0.5 pp   vs LB -0.09 [-0.55, +0.37]
+  T4    n= 6 gap  73.6 +- 0.6 pp   vs LB -0.08 [-0.74, +0.58]
+  last  n= 5 gap  69.9 +- 1.2 pp   vs LB -3.78 [-5.17, -2.39]
+  LB-b1 n= 5 gap  74.3 +- 2.0 pp   vs LB +0.64 [-1.32, +2.61]
+best configuration within a training-memory budget (measured PyTorch peak MiB; d = config - LB-b8, paired; "tied" = paired 93% CI of the difference to the best includes 0):
+  <= 64 MiB  nothing fits (smallest: last at 67.4 MiB)
+  <= 96 MiB  best last  ( 67.4 MiB) test 22.09, d -3.94 | tied: none | TinyTL fits as: nothing
+  <= 128 MiB best T4    (105.2 MiB) test 25.42, d -0.32 | tied: LB-b1 | TinyTL fits as: LB-b1 (d -1.04)
+  <= 192 MiB best T3    (168.6 MiB) test 25.53, d -0.21 | tied: T4, LB-b1 | TinyTL fits as: LB-b1 (d -1.04)
+  <= 256 MiB best T3    (168.6 MiB) test 25.53, d -0.21 | tied: T2, T4, LB-b1 | TinyTL fits as: LB-b1 (d -1.04)
+  <= 512 MiB best T3    (168.6 MiB) test 25.53, d -0.21 | tied: T2, T4, LB-b1 | TinyTL fits as: LB-b1 (d -1.04)
+  no budget  best LB    (557.2 MiB) test 25.74, d +0.00 | tied: T3, T4, LB-b1 | TinyTL fits as: LB (d +0.00)
+cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
+  <= 128 MiB  arms T4/last, n=5: per-seed oracle 25.53 | best fixed arm T4 25.53 | deepest-that-fits T4 25.53 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
+  <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 26.01 | best fixed arm T2 25.76 | deepest-that-fits T2 25.76 | headroom over best fixed 0.25 pp, over deepest 0.25 pp | per-seed winners T2:2 T3:2 T4:1
+  no budget   arms LB/T2/T3/T4/last, n=5: per-seed oracle 26.16 | best fixed arm LB 26.03 | deepest-that-fits LB 26.03 | headroom over best fixed 0.13 pp, over deepest 0.13 pp | per-seed winners LB:3 T3:1 T4:1
+
+(the per-seed oracle also profits from training noise, so the headrooms are upper bounds on what any task-adaptive cutoff rule could gain)

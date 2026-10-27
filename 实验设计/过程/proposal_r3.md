@@ -1,0 +1,405 @@
+# Proposal r3 (final): How deep must few-shot TinyTL back-propagate, and when is batch 1 the better way to fit memory?
+
+TinyTL-L+B, ProxylessNAS-Mobile with TinyTL's `ws+gn` lite-residual checkpoint, k = 5 labels per class. Two datasets: Flowers102 (near-domain) and FGVC-Aircraft (far-domain). One RTX 3060.
+
+## Summary (one page)
+
+**Question.** At k = 5, how shallow can TinyTL's backprop cutoff be while staying within 2 pp of full-depth TinyTL-L+B? We ask this on a near domain (Flowers) and a far domain (Aircraft). And on the far domain, is batch 1 a better way to fit a 128 MiB training budget than truncation?
+
+**Why.**
+1. **Memory.** TinyTL's 37 MB comes from its profiler, which assumes normalization layers cost nothing to back-propagate through. With the GroupNorm TinyTL actually uses, the training step at its published batch 8 needs:
+   - 222 MB under an ideal engine on the profiler's own basis;
+   - 246 MiB under an ideal engine counting fp32 weights and Adam state;
+   - 558 MiB measured in PyTorch.
+
+   In PyTorch (558 MiB) the step does not fit a 512 MB Pi Zero 2-class device (TinyTrain's target); even an ideal engine needs about half of it. With frozen-statistics normalization, the same ideal engine reproduces the profiler (exactly for TinyTL-B and FT-Last, within 11% for LB; Appendix A).
+2. **Levers.** The real levers are depth (where the gradient stops) and batch size. Measured in PyTorch they save 3.3-8.3× and 4.6×; under an ideal engine, 2.6-5.1× and 3.1×.
+3. **Prior work.** TinyTrain's AdapterDrop (Table 6) suggests depth is nearly free on Flowers (all rungs within 1.9 pp of TinyTL) and costly on Aircraft (−17.6 pp for LastLayer). But that result comes from a different protocol and reports no memory.
+4. **What this adds.** We test the AdapterDrop ladder with:
+   - TinyTL's own released checkpoint and recipe;
+   - paired seeds and a pre-registered margin, with Table 6 as the stated prior;
+   - all three memory accountings;
+   - the batch lever, tested against TinyTrain's claim that small batches degrade TinyTL "catastrophically".
+
+**Arms.** Every arm keeps all lite residuals in the forward pass; arms differ only in which parameters receive gradients. The memory and MAC figures in the arms table are produced by `design\` scripts (Appendix A).
+
+| arm | trained | trainable params | measured MiB b8 / b1 | ideal-engine MiB b8 | backward MACs per image |
+|---|---|---|---|---|---|
+| **LB** = TinyTL-L+B | all biases + all lite residuals + head | 1,962,310 | 558 / 123 | 246 | 459 M |
+| T2 | biases + lite residuals from block 9 (stages 2-5) + head | 1,863,766 | 226 / 79 | 120 | 298 M |
+| T3 | same, from block 13 (stages 3-5) | 1,578,246 | 169 / 67 | 95 | 227 M |
+| T4 | same, from block 17 (stages 4-5) | 1,113,126 | 105 / 52 | 65 | 125 M |
+| FT-Last | classifier only | 130,662 | 67 / 25 | 49 | 0.1 M |
+| LB-b1 | LB at batch 1 | 1,962,310 | 123 | 79 | 459 M |
+
+**Hypotheses and decision rules.**
+- *Metric*: final-epoch test top-1.
+- *Effect*: d = arm − LB, paired by seed.
+- *Labels* use the two-sided 93% t-CI [L, U] and a 2 pp margin:
+
+| label | rule |
+|---|---|
+| *retains* | L > −2 |
+| *inferior by more than the margin* | U < −2 |
+| *size unresolved* | U < 0, L ≤ −2, U ≥ −2 |
+| *inconclusive* | L ≤ −2, U ≥ 0 |
+
+Holm adjusts only the *retains* claims. Inferiority labels are per-arm and unadjusted. Sample sizes are fixed, with no extension looks.
+
+| # | test | n (seeds) | rule |
+|---|---|---|---|
+| H1-F | Flowers: T3, T4, FT-Last vs LB | 10 | Holm (one-sided 0.035) over the three *retains* claims. T2 (seeds 0-4) is exploratory, outside Holm. |
+| H1-A | Aircraft: T3, T4, FT-Last vs LB | 6 (FT-Last 5) | Same. T2 (n=6) exploratory. |
+| H2 | Aircraft: LB-b1 (published batch-1 LR) vs LB-b8 | 5 | Primary: *catastrophic* if U < −5, *not catastrophic* if L > −5, otherwise undetermined. Secondary: *within 2 pp* if L > −2. |
+| H2b | Aircraft, ≤128 MiB: LB-b1 vs T4-b8 | 5 | *Batch better* if L > 0; *depth better* if U < 0. A tie goes to T4 (less memory, 3.7× fewer backward MACs). |
+| H4 | Fisher-under-budget cutoff vs oracle, at 128 and 256 MiB, both datasets | seeds 0-4 | Descriptive: regret, and whether Fisher picks a deeper cutoff on Aircraft. |
+
+**Run list.** All runs are 50 epochs, final-epoch test, no checkpoint selection. "Realistic" uses arm-specific run times (Appendix D).
+
+| block | content | runs | GPU-h |
+|---|---|---|---|
+| M | memory, MACs and timing harnesses; smoke runs; protocol bridge; Fisher (H4) | n/a | 0.4 |
+| P-F | Flowers LR pilot: {LB, T3, FT-Last} × {2e-4, 8e-4, 3.2e-3} × seeds 100-101 | 18 | 2.42 |
+| P-Air | Aircraft LR pilot: {LB, T3, FT-Last} × {4e-4, 1.6e-3, 6.4e-3} × seed 100 | 9 | 1.51 |
+| A-F | Flowers: {LB, T3, T4, FT-Last} × seeds 0-9, plus T2 × seeds 0-4 | 45 | 6.03 |
+| A-Air | Aircraft: {LB, T2, T3, T4} × seeds 0-5, plus FT-Last × seeds 0-4 | 29 | 4.86 |
+| C-Air | Aircraft LB-b1 at 3e-4 × seeds 0-4 | 5 | 2.71 |
+| **core** | | 106 | **17.9** |
+| cond. 1 | half-budget convergence check: at most one 100-epoch run per dataset | ≤ 2 | ≤ 0.62 |
+| cond. 2 | H2 LR check: seed 0 at 1e-4 and at 1.2e-3 | 2 | 1.08 |
+| **core + every conditional** | | | **19.6 realistic; 25.5 with +30%** |
+
+**Schedule.** Only one decision falls between GPU nights: whether the H2 LR check fires. It needs the Aircraft batch-8 LB runs, so Aircraft runs first.
+
+| when | what | GPU-h |
+|---|---|---|
+| Day 0 | Code; Aircraft download and prep (CPU); smoke runs | 0.1 |
+| Day 1 | M, P-F and P-Air; freeze `lr_choice.json`; half-budget check | 4.1 + ≤ 0.6 |
+| Night 1 | A-Air, then C-Air | 7.6 |
+| Day 2 | Aircraft H1 and H2 labels; decide the H2 LR check | |
+| Night 2 | A-F, then the H2 LR check if triggered | 6.0 + ≤ 1.1 |
+| Day 3 | Flowers H1, H4, plots | |
+
+Note: the profiler matches in Appendix A hold by construction, because the ideal-engine bound uses the profiler's own conventions. They show that the GN inputs are the only difference, not an independent validation.
+
+---
+
+## 1. Design details
+
+### 1.1 Data
+
+**Flowers102.**
+- Original `setid.mat` splits: train 1,020 (10 per class), val 1,020, test 6,149.
+- For each seed, `build_root(5, seed)` draws 5 images per class from train with `Random(seed)`. The same images are used for every arm at that seed.
+- Val is used only for the LR pilot and the convergence check. Test is evaluated once per run.
+
+**FGVC-Aircraft, prep on Day 0 (CPU only).**
+- **Download.** `fgvc-aircraft-2013b.tar.gz` from the Oxford VGG site, about 2.7 GB (83 GB free). The team downloads it with its own approval.
+- **Splits.** Official variant-level files `images_variant_{train,val,test}.txt`: 3,334 / 3,333 / 3,333 images, 100 variants, about 33 per variant per split.
+- **Parsing.** Each line is `<id> <variant>`. Split on the first space only, because variant names contain spaces. Map each name to its integer index in `variants.txt` and use the index as the folder name, because "F-16A/B" and "F/A-18" contain "/". Assert that train, val, test and every k-shot root have the same 100 classes.
+- **`prepare_aircraft.py`.**
+  - Crop the 20-pixel copyright banner at the bottom.
+  - Resize so the shorter side is 512 px (JPEG quality 95).
+  - Write `data/aircraft_prep/{train,val,test}/<idx>/<id>.jpg`.
+  - The smallest RandomResizedCrop(224, scale 0.22) is still a downsample (side ≈ 290 px), and the test transform Resize(256)/CenterCrop(224) is unchanged.
+  - Measured CPU cost per training image (`decode_time.py`): 10.3 ms pre-resized vs 17.3 ms at 1.3 MP, both with upstream's ColorJitter. Flowers costs 5.2 ms.
+- **k-shot roots.** `build_root_aircraft(5, seed)`: 5 per variant from train with `Random(seed)`. Val is a fixed 10-per-variant subset of the val split (1,000 images, chosen with `Random(12345)`). Test is all 3,333 images.
+- **Provider.** In our script, monkeypatch `AircraftDataProvider.save_path` to read `TINYTL_AIRCRAFT_PATH`.
+
+**Declared deviations from upstream.**
+- Both datasets: checkpoint chosen as the final epoch instead of on test; k-shot subsampling.
+- Aircraft only:
+  - the official 3-way split instead of hanlab's `train.txt`/`val.txt` (`dataset_setup_scripts/make_aircraft.py`);
+  - the banner crop (upstream does not crop);
+  - the 512-px pre-resize.
+- Shared: KMeans `random_state=0`, and reseeding before training (§1.3).
+
+### 1.2 Training recipe and learning rates
+
+**Recipe.** Upstream's per-dataset recipe:
+- 50 epochs, Adam, cosine schedule, label smoothing 0.7, 224 px, 8-bit k-means quantization of frozen weights;
+- `distort_color` None for Flowers and `torch` for Aircraft;
+- batch 8, giving 3,200 / 3,125 steps.
+
+LB-b1 uses the published batch-1 LR of its dataset (`exp_scripts/batch1/aircraft.sh`: 3e-4) and runs 25,000 steps. Upstream's batch-1/batch-8 LR ratio is 1.5 on Flowers and 0.19 on Aircraft, so a ratio rule would not be a recipe.
+
+**LR pilot.** Fixed grids, with no adaptive extension:
+- Flowers: {2e-4 (upstream), 8e-4, 3.2e-3}, 2 seeds.
+- Aircraft: {4e-4, 1.6e-3 (upstream), 6.4e-3}, 1 seed. Within a seed the comparison is paired, and LR steps are 4×.
+- Score: mean final-epoch val.
+- A non-upstream LR is chosen only if it beats upstream's by ≥ 1 pp.
+- T4 and T2 take T3's LR.
+- If the winner sits at the edge of the grid, it is flagged as a limitation; there is no extension.
+- `lr_choice.json` is frozen before Night 1.
+
+**Asymmetry in H2.** LB-b8's LR is pilot-tuned while LB-b1 uses the published value. This makes "not catastrophic" and "within 2 pp" conservative conclusions, and makes negative H2 labels LR-suspect. That is why conditional 2 exists.
+
+### 1.3 Protocol
+
+**Model selection.** None. The epoch-50 model is evaluated on test once. Val is logged every 5 epochs.
+
+**RNG.**
+- Reseed `torch`, `numpy` and `random` immediately before `run_manager.train()`.
+- Monkeypatch `tinytl.utils.common_utils.KMeans` with `random_state=0`, so frozen layers shared between arms are quantized identically.
+- A seed then fixes the subset, the head init and the data order across arms.
+
+**Memory.** `measure_memory.py` produces Appendix A:
+- profiler;
+- ideal engine on the profiler's basis and on the resident basis;
+- measured PyTorch peak: one throw-away arm first, 3 processes, with utilization logged.
+
+Memory is never taken from training runs; their peak is stored as `run_peak_incl_eval_MiB`.
+
+**Compute.** Analytic backward MACs (`macs.py`). GPU ms per step only on an idle GPU, labelled "our machine".
+
+### 1.4 The two conditionals
+
+1. **Half-budget convergence check (Day 1).**
+   - For each piloted arm at its chosen LR: Δ = mean val at epochs {45, 50} − mean val at epochs {20, 25}, averaged over the pilot seeds.
+   - On the old Flowers runs, Δ is 0.24-0.69 for r1, 0.44-1.67 for r2, and 0.64-2.65 for r4 (per seed).
+   - If Δ > 1.5 pp, the arm with the largest Δ on that dataset gets one 100-epoch run on pilot seed 100.
+   - If val then improves by ≥ 1 pp, that arm's H1 results (and those of T4 and T2 if the flagged arm is T3) are labelled "at the official 50-epoch budget (+x pp on val at 100 epochs)".
+   - The main runs do not change.
+2. **H2 LR check (Night 2).**
+   - Fires if d_b1 (point estimate) < −2 pp.
+   - Run seed 0 at 1e-4 and at 1.2e-3.
+   - Let Δ0 = val(LB-b8) − val(LB-b1 at 3e-4) on seed 0.
+   - If either alternative LR leaves less than Δ0/2 of the drop, report "the batch-1 loss is LR-sensitive", make no degradation claim, and state the better LR.
+   - Otherwise the H2 label stands.
+
+### 1.5 H4: Fisher-under-budget as a cutoff chooser (no training)
+
+For seeds 0-4 on both datasets, before any training:
+- **Fisher potential.** Compute TinyTrain Eq. 2 on block outputs over the 5-shot images (no augmentation).
+- **Head.** The head is ProtoNet-equivalent with **leave-one-out prototypes**. Logits are 2 f·μ_c − ‖μ_c‖²; for each image's own class, μ_c is computed without that image. Use plain CE, no label smoothing, and log the support loss and accuracy so that a degenerate Fisher is visible.
+- **Scoring.** Group stages to match the run cutoffs (G2 = stage 2, G3 = stage 3, G45 = stages 4-5). Score each group with Eq. 3, normalized by its trainable parameters and the backward MACs it adds.
+- **Selection.** Apply TinyTrain's prefix-greedy rule under the measured batch-8 memory of the truncation at the earliest selected group. The budgets are 128 MiB (feasible run arms: T4, FT-Last) and 256 MiB (T2, T3, T4, FT-Last).
+- **Report.**
+  - hit rate and regret against two oracles: the per-seed best run arm within the budget, and the arm with the best mean;
+  - the same for the static rules "deepest feasible" and "always FT-Last";
+  - the fraction of seeds where Fisher's 256 MiB choice is deeper on Aircraft than on Flowers.
+- **Reading.**
+  - *Useful*: regret ≤ the better static rule on both datasets, and deeper on Aircraft in ≥ 70% of seeds.
+  - *No advantage*: otherwise.
+
+## 2. Implementation plan
+
+About one calendar week for 3 people, including smoke tests. No existing file is modified; upstream behaviour changes only through monkeypatches in our scripts.
+
+| # | file | content | lines |
+|---|---|---|---|
+| 1 | `fewshot_depth.py` (from `fewshot_resolution.py`) | `--dataset --arm --batch --lr --seed --epochs`. `set_trainable(net, arm)` placed before quantization and before `RunManager`, asserting the parameter counts above. Official r=2 lite-residual insertion. Per-dataset recipe. Aircraft `save_path` patch. Reseeding and KMeans patches. Profiler `batch_size=args.batch` and `require_backward=(arm != 'last')`. Final-epoch test of the in-memory model. Val log parsed via `Valid [e/50]` and `Train top1`. `save_model` writes only at the last epoch. `result.json` fields. | ≈ 270 |
+| 2 | `prepare_aircraft.py` + `build_root_aircraft` | §1.1, with the parsing and folder-name rules and the class-list assertions. | ≈ 90 |
+| 3 | `measure_memory.py` | Merges `design\mem_harness.py`, `engine_bound_r3.py` and `mem_repeat.py`. | ≈ 220 |
+| 4 | `measure_macs.py`, `measure_time.py` | From `design\macs.py`. Timing refuses to run above 5% GPU utilization. | ≈ 85 |
+| 5 | `make_runlist.py`, `run-depth-sweep.sh` | Fixed run list in seed-major order; bash driver that skips runs already done and stops on the first failure. | ≈ 80 |
+| 6 | `fisher_stage.py` | §1.5. | ≈ 120 |
+| 7 | `analyze_depth.py` | 93% CIs, the labels, Holm, H2/H2b rules, Welch cross-domain contrasts, Pareto plots with three memory columns, prior-vs-observed table. | ≈ 200 |
+| 8 | `eval_final_ckpt.py` | Protocol bridge: old r2 final checkpoints evaluated on test. | ≈ 40 |
+
+Suggested split:
+- Person 1: #1 and #8.
+- Person 2: #2, #5 and the download.
+- Person 3: #3, #4, #6 and #7.
+
+## 3. Risks and fallbacks
+
+| risk | fallback |
+|---|---|
+| Aircraft not obtainable or prepared by the end of Day 0 | **Fallback.** Flowers only, framed as the near-domain case. C moves to Flowers: LB-b1 × 6 at 3e-4, 3.1 h. The k=2 trend block (LB, T3, FT-Last × 10 seeds, plus a step-matched control of LB and FT-Last at 125 epochs × 3 seeds, 2.95 h) enters the core, paid for by the Aircraft hours (≈ 9.1 h). |
+| Run-time model optimistic (checked after the first 3 pilot runs) | Pre-registered cuts, in order: (1) Flowers seeds 10 → 9 (−0.53 h); (2) Aircraft LB/T2/T3/T4 seeds 6 → 5 (−0.68 h); (3) drop 3.2e-3 from the LB and T3 Flowers pilot (−0.57 h). |
+| Paired SD larger than planned | Fixed n; inconclusive arms are reported as such, with their CIs (Appendix B gives the probabilities). |
+| Pilot noise (Aircraft 1 seed) | The ≥ 1 pp rule favours upstream's LR. Pilot margins are reported beside H1 labels. |
+| GPU shared with other apps (11-36% seen during these checks) | Close other apps; check utilization before each night. Memory measurements are unaffected. |
+| Priors do not transfer | Itself a finding. Report prior vs observed per rung, and attribute gaps to the listed protocol differences only with "may". |
+| Scope | All claims are for ProxylessNAS-Mobile at 224 px, k=5, fp32 PyTorch, and an fp32 ideal engine. Out of scope: activation recomputation, low-precision saved activations, feature caching for FT-Last. |
+
+## 4. Expected outcome → conclusion
+
+L and U are the bounds of the 93% CI of d, in pp. Every conclusion is printed with d and its CI.
+
+| result | conclusion |
+|---|---|
+| H1-F: FT-Last *retains* (Holm) | On near-domain few-shot data, training only the classifier costs < 2 pp, at 8.3× less measured memory (5.1× under the ideal engine). TinyTL's adaptation is not worth its memory here. Consistent with Table 6. |
+| H1-F: FT-Last *size unresolved* or *inconclusive*, T3 *retains* | Stages 3-5 keep accuracy within 2 pp at 169 MiB (3.3×; 2.6× under the engine). The classifier alone costs between 0 and \|L\| pp: not shown within 2 pp, not shown worse than 2 pp. |
+| H1-F: no arm *retains*, none *inferior* | Every truncation costs a bounded but unresolved amount, at most \|L\| pp. No cutoff is shown safe at 2 pp, and none is shown to cost more than 2 pp. |
+| H1-F: some arm *inferior* (U < −2) | On Flowers, adaptation deeper than that cutoff is needed under TinyTL's recipe, contrary to Table 6. T2's exploratory CI indicates how deep. |
+| H1-A: T3 *inferior*; T2 *retains* (exploratory, unadjusted) | On far-domain data, stages 3-5 lose more than 2 pp. Stages 2-5 may suffice (226 MiB, 2.5×). Matches Table 6's ladder. |
+| H1-A: T3 *inferior*; T2 *size unresolved* or *inconclusive* | Stages 3-5 lose more than 2 pp. T2 costs between 0 and \|L\| pp; full depth is not shown to be necessary. |
+| H1-A: T3 and T2 both *inferior* | Far-domain few-shot needs nearly full-depth adaptation: any truncation that saves ≥ 2.5× costs more than 2 pp. Only the batch lever remains (H2). |
+| H1-A: T3 *size unresolved* or *inconclusive* | T3 costs between 0 and \|L\| pp; neither safe nor shown worse than the margin. |
+| H1-A: T3 *retains* | TinyTL's pretrained lite residuals with L+B allow shallow adaptation where Table 6's fresh adapters did not. Report it as a protocol effect. |
+| H1-A: T4 and FT-Last *inferior* (expected) | Under 128 MiB on far-domain data, truncation costs more than 2 pp (expected about 10 and 17 pp). |
+| H2: *not catastrophic* and *within 2 pp* | TinyTL with its GN checkpoint trains at batch 1 in few-shot within 2 pp, at 123 MiB (4.6× less). TinyTrain's "catastrophic" claim does not hold for TinyTL's own configuration; its cause may lie in their setup. |
+| H2: *not catastrophic*, not within 2 pp | Batch 1 is not catastrophic. Whether it costs under 2 pp is unresolved; if U < −2 it is a real loss of between \|U\| and 5 pp. |
+| H2: *catastrophic*, and the LR check does not recover half | Even with GN and its published batch-1 LR, batch 1 breaks few-shot TinyTL. TinyTrain's observation is reproduced, and the batch lever is unusable. |
+| H2: drop > 2 pp, and the LR check recovers more than half | The drop is an LR artifact; no degradation claim. The better LR is reported as the few-shot batch-1 recipe. |
+| H2: undetermined | Report the CI; the size of the batch-1 cost is unresolved. |
+| H2b: batch better / depth better / tie | To fit 128 MiB on far-domain data, use batch 1 / T4 / T4. If the priors hold, "batch better" is a confirmation, not a discovery. |
+| H4: *useful* / *no advantage* | Fisher-under-budget adapts the cutoff to the task at no regret, so the story's task-adaptive idea survives / a static "deepest that fits" rule is as good at this granularity. |
+
+---
+
+## Appendix A. Memory: three accountings
+
+**Scripts.** All in `design\`, no training:
+- `engine_bound_r3.py` → `engine_bound_r3_result.json`
+- `mem_harness.py` / `mem_repeat.py` → `*_result.json`
+- `macs.py` → `macs_result.json`
+
+**Ideal-engine bound.** One forward pass records every autograd save and every leaf-op boundary.
+
+1. *What each saved tensor costs.* Decided from all its savers:
+   - full fp32 if any saver is a norm layer or a conv/linear with a trainable weight;
+   - 1 bit per element if the savers are only ReLU/ReLU6;
+   - 0 otherwise (frozen convs and shape-only ops).
+2. *Activation peak.* Replay the pass and take the maximum of (needed-so-far + live transient). The live transient follows TinyTL's profiler conventions: conv x + y/groups (in-place depthwise), linear x + y, norm and activation in place, plus the residual. A tensor already counted as needed is not counted again.
+3. *Bases.*
+   - **Profiler basis:** + trainable params × 4 B + frozen × 1 B. Directly comparable to the profiler.
+   - **Resident basis:** + fp32 weights + gradients + Adam m and v + the input batch. Comparable to PyTorch.
+
+Lower-precision saved activations or recomputation would lower the bound further; both are out of scope.
+
+**Table A1.** Profiler and engine (profiler basis) in MB; engine (resident basis) and measured in MiB. Measured ranges are over 3 processes.
+
+| arm | b8: profiler | b8: engine, profiler basis | b8: engine, resident | b8: measured | b1: profiler | b1: engine, resident | b1: measured |
+|---|---|---|---|---|---|---|---|
+| FT-Last | 30.8 | 30.8 | 48.7 | 67.4 | 8.3 | 23.2 | 25.1-25.9 |
+| T4 | 34.6 | 38.9 | 64.8 | 105.0-105.2 | 11.4 | 41.9 | 51.5-52.1 |
+| T3 | 36.0 | 66.2 | 94.8 | 168.6-169.4 | 12.8 | 53.4 | 66.5-67.2 |
+| T2 | 36.8 | 90.4 | 120.4 | 225.7-226.5 | 13.6 | 61.3 | 78.5 |
+| LB | 37.1 | 221.5 | 246.2 | 557.2-559.8 | 13.9 | 78.7 | 122.1-123.2 |
+| TinyTL-B | 31.7 | 192.7 | 203.2 | 537.0-537.1 | 8.5 | 43.1 | 101.7-102.4 |
+| FT-Full | 390.8 | 427.8 | 466.9 | 598.7-599.7 | 65.5 | 152.7 | 158.6-160.0 |
+| LB, GN → frozen affine | 37.1 | 41.2 | 74.2 | 385.2 | 13.9 | 57.0 | 100.6 |
+| B, GN → frozen affine | 31.7 | **31.7** | 49.6 | 364.9 | 8.5 | 23.5 | 79.2 |
+| T3, GN → frozen affine | 36.0 | 35.1 | 65.2 | 130.0 | 12.8 | 48.4 | 62.2 |
+
+**Readings.**
+- *The engine reproduces the profiler where it should.* On the profiler's own basis it gives exactly the profiler's number for FT-Last (30.8 = 30.8), where no gradient passes a norm. It also matches B with frozen-affine norms exactly, at both batch 8 (31.7 = 31.7) and batch 1 (8.5 = 8.5). So **the profiler is an ideal-engine model for frozen-statistics normalization**.
+- *With GroupNorm, the gap is the GN inputs.* With the GroupNorm TinyTL actually uses, the same engine needs 192.7 MB for B and 221.5 MB for LB (6.0-6.1× the profiler). Only GN inputs separate those runs from the affine runs. In PyTorch, GN costs 172-175 MiB at batch 8 (LB 559.8 → 385.2).
+- *The first-arm effect.* The first arm measured in a process also pays a one-time ~16 MiB workspace: LB measures 573.4 first vs 557.2 sixth in the same process (`mem_repeat_result.json`).
+- *Lever sizes at batch 8, in each accounting:*
+
+| lever | profiler | engine (resident) | PyTorch |
+|---|---|---|---|
+| method type, FT-Full / LB | 10.5× | 1.90× | 1.07× |
+| depth, LB / T3 | 1.03× | 2.6× | 3.3× |
+| depth, LB / T4 | 1.07× | 3.8× | 5.3× |
+| depth, LB / FT-Last | 1.20× | 5.1× | 8.3× |
+| batch, LB b8 / b1 | 2.7× | 3.1× | 4.6× |
+
+  Depth and batch are real levers outside the profiler; the profiler does not see the depth lever at all. Only the method-type lever's size depends on the accounting.
+- *Backward MACs per image* (conv + linear; forward is 395 M for every arm): FT-Last 0.1 M, T4 125 M, T3 227 M, T2 298 M, LB 459 M, TinyTL-B 384 M, FT-Full 778 M.
+
+## Appendix B. Decision-rule simulations (`power_r3.py`, `power_r3_h2.py`)
+
+**Model.** Fixed n, 93% CIs, Holm over the three *retains* claims, and the noise model acc = μ_arm + seed effect + ε_arm, under which paired differences share LB's noise. The probability of a single NI claim being wrong at true d = −2 is 3.5%.
+
+**Table B1.** Label probabilities under the Table-6 priors.
+
+| dataset (paired SD) | T3 | T4 | FT-Last | T2 (exploratory) |
+|---|---|---|---|---|
+| Flowers (1.8), priors −1.0 / −1.9 / −0.7 / −0.8 | retains 26% (+16% unadjusted only); size unresolved 34%; inconclusive 24% | size unresolved 84% | retains 40% (+20%); size unresolved 19%; inconclusive 21% | n=5: inconclusive 59%, retains 27% |
+| Flowers (2.5) | inconclusive 50%; retains 14% | size unresolved 61%; inconclusive 32% | inconclusive 47%; retains 21% | inconclusive 73% |
+| Aircraft (2.5), priors −3.1 / −10.6 / −17.6 / −2.6 | size unresolved 58%; inconclusive 24%; inferior 18% | inferior 100% | inferior 100% | size unresolved 52%; inconclusive 37%; inferior 9% |
+| Aircraft (3.5) | inconclusive 49%; size unresolved 38%; inferior 12% | inferior 100% | inferior 100% | inconclusive 60% |
+
+**H2 (n=5).**
+
+| true d | SD 2.5 | SD 3.5 |
+|---|---|---|
+| 0 | *not catastrophic* 0.95; *within 2 pp* 0.35 | *not catastrophic* 0.75 |
+| −10 | *catastrophic* 0.95 | *catastrophic* 0.75 |
+| −5 | undetermined 0.93 (correctly: the drop is at the threshold) | |
+
+**H2b (n=5).** With e = +10.6 (LB-b1 retains, T4 at its prior), P(*batch better*) = 1.00 at SD 2.5 and 3.5. With e = +5 it is 0.95 at SD 2.5.
+
+**Interpretation.** Flowers is predicted to sit near the margin. Expect several *size unresolved* or *inconclusive* labels, reported with their CIs. Aircraft resolves T4 and FT-Last. T3 and T2 there are the open questions, which is where the seeds go.
+
+## Appendix C. Priors (TinyTrain Table 6, ProxylessNAS, `tinytrain_paper.txt` lines 1233-1239)
+
+Arms map onto the AdapterDrop (AD) rungs by the share of the 21 lite-residual blocks kept. Priors are d relative to TinyTL (86.2 Flower, 70.3 Aircraft).
+
+| arm | blocks kept | AD analogue | Flower prior d | Aircraft prior d |
+|---|---|---|---|---|
+| T2 | 13/21 (62%) | between AD-25% and AD-50% | −0.6 to −1.0 | −2.1 to −3.1 |
+| T3 | 9/21 (43%) | ≈ AD-50% | −1.0 | −3.1 |
+| T4 | 5/21 (24%) | ≈ AD-75% | −1.9 | −10.6 |
+| FT-Last | | LastLayer | −0.7 | −17.6 |
+
+Table 6's protocol differs from ours in five ways:
+1. meta-trained backbones;
+2. fresh, lite-residual-only adapters;
+3. various-way tasks;
+4. about 25 samples and 40 iterations;
+5. batch 100, and no memory reported.
+
+## Appendix D. Run-time model and budget
+
+**Base model** (context.md, ±30%):
+- Flowers LB costs 16.8 ms per training image, including loading. Per run, add 1.8 min (val every 5 epochs, one test pass, setup).
+- Arm-specific GPU time per image at batch 8. Measured: LB 7.2, T3 5.0, head 3.1 ms. Interpolated: T4 ≈ 4.1, T2 ≈ 6.1 ms.
+- Aircraft adds 5.1 ms per image (measured decode + jitter) and about 0.2 min of eval.
+- Batch 1 costs 68 ms per image (73 ms on Aircraft).
+
+**Minutes per run.**
+
+| run type | LB | T2 | T3 | T4 | FT-Last |
+|---|---|---|---|---|---|
+| Flowers k=5, b8 | 9.0 | 8.5 | 8.0 | 7.7 | 7.2 |
+| Aircraft k=5, b8 | 10.9 | 10.4 | 10.0 | 9.6 | 9.2 |
+| Aircraft LB-b1 | 32.5 | | | | |
+| 100-epoch check, LB | Flowers 16.6, Aircraft 20.6 | | | | |
+
+**Block arithmetic.**
+
+| block | computation | min | h |
+|---|---|---|---|
+| P-F | 6 × (9.0 + 8.0 + 7.2) | 145.2 | 2.42 |
+| P-Air | 3 × (10.9 + 10.0 + 9.2) | 90.3 | 1.51 |
+| A-F | 10 × 31.9 + 5 × 8.5 | 361.5 | 6.03 |
+| A-Air | 6 × 40.9 + 5 × 9.2 | 291.4 | 4.86 |
+| C-Air | 5 × 32.5 | 162.5 | 2.71 |
+| M + smoke + Fisher | | | 0.4 |
+| **core** | | | **17.9** |
+| conditionals, worst case | 16.6 + 20.6 + 2 × 32.5 | | 0.62 + 1.08 |
+| **total** | | | **19.6** |
+
+- With +30% on every run: 25.5 h, within the 40 h ceiling, and the cut order in §3 applies.
+- Conservative, with every arm at LB's rate: 21.2 h.
+- Optional extensions, only if time remains, in rank order:
+
+| rank | extension | GPU-h |
+|---|---|---|
+| 1 | More Aircraft seeds for LB, T2 and T3 | 1.7 per 5 seeds |
+| 2 | H2 on Flowers | 3.1 |
+| 3 | TinyTL-L with fresh lite residuals at batch 1 vs 8 (closest proxy to TinyTrain's baseline) | 2.8 |
+| 4 | k=2 trend with its step-matched control | 2.95 |
+| 5 | FT-Full on both datasets | 3.9 |
+| 6 | Paper-protocol reproduction of the 5 baselines | 3.7 |
+
+## Appendix E. Changes and responses to review
+
+**r1 → r2.**
+- Aircraft enters the core, with Table 6 as the prior.
+- Four labels, 93% CIs and Holm.
+- Three memory accountings, plus the GN ablation.
+- Batch 1 at its published LR, with an LR check.
+- The k-trend moved to optional, with a step-matched control.
+- Fisher moved to the core.
+- MACs replace GPU-ms compute claims.
+- RNG, trainer, disk and provenance fixes.
+
+**r2 → r3** (this round):
+
+| item | change |
+|---|---|
+| R1 transient | The engine bound now includes the forward transient under the profiler's own conventions (`engine_bound_r3.py`). FT-Last becomes 48.7 MiB (resident), matching the reviewer's 48.7. LB/FT-Last becomes 5.1×, not 10.1×; §1 now says "2.6-5.1×". The "B frozen-affine matches the profiler" claim is now made on the same basis: 31.7 = 31.7 MB, and FT-Last 30.8 = 30.8. |
+| R2 H4 undefined | T2 runs unconditionally on both datasets (Flowers seeds 0-4, Aircraft 0-5), outside Holm. H4 uses seeds 0-4 on both datasets, with the oracle defined as the best run arm within budget (per seed and by mean). |
+| R3 labels | §4 rows say "> 2 pp" only for *inferior*. The Aircraft label table is recomputed for the core design with fixed n (Table B1). Holm adjusting only *retains* is stated. |
+| Simplification (adopted) | Fixed n (Flowers 10, Aircraft 6 with FT-Last 5, H2 5). No extension looks. T2 always run. T4 and T2 take T3's LR. Fixed LR grids with no edge rule. Exactly two conditionals. |
+| H2 sample size | n = 5, not the suggested 8, to keep core + every conditional ≤ 20 h. To keep H2 decisive at n=5, its primary question is now "catastrophic (5 pp) or not", which is well resolved (0.95 at both poles, SD 2.5). Within 2 pp is secondary and weak (0.35), and stated so. |
+| N1-N10 | All adopted: engine fp32 note; seeds on Aircraft T2/T3; H2 asymmetry; parsing and folders; deviations declared; T4 LR inheritance in budget; leave-one-out Fisher head; smoothed half-budget statistic with explicit inheritance; regret vs both oracles; provenance. |
+
+**Story ⑧ wording.** The k-axis is replaced by a near/far domain axis at k=5. As a qualitative "more data" anchor, quote the TinyTL paper's full-data gaps: Flowers L+B 95.5 vs FT-Last 90.1, plus its Aircraft row, which should be read from the paper since it was not verified here.

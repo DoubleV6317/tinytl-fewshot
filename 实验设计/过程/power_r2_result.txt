@@ -1,0 +1,54 @@
+H1 Flowers n=10 -> 15
+  sd 1.8 d  +0.0: P(ext fires) 0.07 | final retains 0.98 unres 0.02 inconcl 0.00 inferior 0.00
+  sd 1.8 d  -1.0: P(ext fires) 0.24 | final retains 0.54 unres 0.43 inconcl 0.03 inferior 0.00
+  sd 1.8 d  -2.0: P(ext fires) 0.07 | final retains 0.04 unres 0.92 inconcl 0.00 inferior 0.04
+  sd 1.8 d  -3.0: P(ext fires) 0.00 | final retains 0.00 unres 0.59 inconcl 0.00 inferior 0.41
+  sd 1.8 d  -5.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 inferior 1.00
+  sd 2.5 d  +0.0: P(ext fires) 0.28 | final retains 0.87 unres 0.05 inconcl 0.08 inferior 0.00
+  sd 2.5 d  -1.0: P(ext fires) 0.50 | final retains 0.39 unres 0.38 inconcl 0.23 inferior 0.00
+  sd 2.5 d  -2.0: P(ext fires) 0.28 | final retains 0.05 unres 0.83 inconcl 0.08 inferior 0.04
+  sd 2.5 d  -3.0: P(ext fires) 0.05 | final retains 0.00 unres 0.74 inconcl 0.00 inferior 0.25
+  sd 2.5 d  -5.0: P(ext fires) 0.00 | final retains 0.00 unres 0.05 inconcl 0.00 inferior 0.95
+  sd 3.0 d  +0.0: P(ext fires) 0.42 | final retains 0.76 unres 0.05 inconcl 0.19 inferior 0.00
+  sd 3.0 d  -1.0: P(ext fires) 0.60 | final retains 0.32 unres 0.31 inconcl 0.37 inferior 0.00
+  sd 3.0 d  -2.0: P(ext fires) 0.42 | final retains 0.05 unres 0.72 inconcl 0.19 inferior 0.03
+  sd 3.0 d  -3.0: P(ext fires) 0.15 | final retains 0.00 unres 0.77 inconcl 0.03 inferior 0.20
+  sd 3.0 d  -5.0: P(ext fires) 0.00 | final retains 0.00 unres 0.15 inconcl 0.00 inferior 0.85
+H1 Aircraft n=5 -> 10
+  sd 2.5 d  +0.0: P(ext fires) 0.62 | final retains 0.71 unres 0.05 inconcl 0.24 inferior 0.00
+  sd 2.5 d  -2.0: P(ext fires) 0.62 | final retains 0.06 unres 0.67 inconcl 0.23 inferior 0.04
+  sd 2.5 d  -3.0: P(ext fires) 0.38 | final retains 0.01 unres 0.80 inconcl 0.04 inferior 0.15
+  sd 2.5 d  -6.0: P(ext fires) 0.01 | final retains 0.00 unres 0.16 inconcl 0.00 inferior 0.84
+  sd 2.5 d -10.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 inferior 1.00
+  sd 2.5 d -17.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 inferior 1.00
+  sd 3.5 d  +0.0: P(ext fires) 0.75 | final retains 0.48 unres 0.06 inconcl 0.47 inferior 0.00
+  sd 3.5 d  -2.0: P(ext fires) 0.75 | final retains 0.06 unres 0.43 inconcl 0.47 inferior 0.04
+  sd 3.5 d  -3.0: P(ext fires) 0.60 | final retains 0.01 unres 0.65 inconcl 0.22 inferior 0.12
+  sd 3.5 d  -6.0: P(ext fires) 0.12 | final retains 0.00 unres 0.34 inconcl 0.00 inferior 0.66
+  sd 3.5 d -10.0: P(ext fires) 0.00 | final retains 0.00 unres 0.02 inconcl 0.00 inferior 0.98
+  sd 3.5 d -17.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 inferior 1.00
+H2 n=6 -> 10 (moderate / catastrophic labels)
+  sd 1.8 d  +0.0: P(ext fires) 0.30 | final retains 0.91 unres 0.04 inconcl 0.05 moderate 0.00 catastr 0.00
+  sd 1.8 d  -1.0: P(ext fires) 0.52 | final retains 0.43 unres 0.38 inconcl 0.18 moderate 0.00 catastr 0.00
+  sd 1.8 d  -3.0: P(ext fires) 0.06 | final retains 0.00 unres 0.74 inconcl 0.00 moderate 0.25 catastr 0.00
+  sd 1.8 d  -6.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 moderate 0.74 catastr 0.25
+  sd 1.8 d -10.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 moderate 0.00 catastr 1.00
+  sd 2.5 d  +0.0: P(ext fires) 0.54 | final retains 0.71 unres 0.05 inconcl 0.24 moderate 0.00 catastr 0.00
+  sd 2.5 d  -1.0: P(ext fires) 0.68 | final retains 0.30 unres 0.29 inconcl 0.41 moderate 0.00 catastr 0.00
+  sd 2.5 d  -3.0: P(ext fires) 0.26 | final retains 0.00 unres 0.79 inconcl 0.04 moderate 0.16 catastr 0.00
+  sd 2.5 d  -6.0: P(ext fires) 0.00 | final retains 0.00 unres 0.08 inconcl 0.00 moderate 0.76 catastr 0.16
+  sd 2.5 d -10.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 moderate 0.02 catastr 0.98
+  sd 3.0 d  +0.0: P(ext fires) 0.64 | final retains 0.58 unres 0.05 inconcl 0.36 moderate 0.00 catastr 0.00
+  sd 3.0 d  -1.0: P(ext fires) 0.74 | final retains 0.24 unres 0.23 inconcl 0.52 moderate 0.01 catastr 0.00
+  sd 3.0 d  -3.0: P(ext fires) 0.41 | final retains 0.01 unres 0.73 inconcl 0.12 moderate 0.13 catastr 0.00
+  sd 3.0 d  -6.0: P(ext fires) 0.01 | final retains 0.00 unres 0.18 inconcl 0.00 moderate 0.69 catastr 0.13
+  sd 3.0 d -10.0: P(ext fires) 0.00 | final retains 0.00 unres 0.00 inconcl 0.00 moderate 0.06 catastr 0.94
+type-I(retains | d=-2) n 10->15 sd 1.8: 0.042
+type-I(retains | d=-2) n 10->15 sd 2.5: 0.050
+type-I(retains | d=-2) n 10->15 sd 3.0: 0.053
+type-I(retains | d=-2) n 5->10 sd 1.8: 0.053
+type-I(retains | d=-2) n 5->10 sd 2.5: 0.057
+type-I(retains | d=-2) n 5->10 sd 3.0: 0.059
+type-I(retains | d=-2) n 6->10 sd 1.8: 0.049
+type-I(retains | d=-2) n 6->10 sd 2.5: 0.054
+type-I(retains | d=-2) n 6->10 sd 3.0: 0.055

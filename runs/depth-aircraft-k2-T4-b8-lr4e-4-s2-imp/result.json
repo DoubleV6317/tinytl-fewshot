@@ -1,0 +1,159 @@
+{
+  "name": "depth-aircraft-k2-T4-b8-lr4e-4-s2-imp",
+  "dataset": "aircraft",
+  "k": 2,
+  "arm": "T4",
+  "batch": 8,
+  "lr": 0.0004,
+  "seed": 2,
+  "epochs": 50,
+  "val_every": 5,
+  "steps": 1250,
+  "n_train_images": 200,
+  "tag": "",
+  "head_init": "imprint",
+  "imprint": {
+    "tau": 72.443596007499,
+    "tau_at_grid_edge": false,
+    "support_loss": 4.272612556819371,
+    "support_top1": 93.5,
+    "loo_top1": 5.0,
+    "loo_tau": 10000.0,
+    "loo_tau_at_grid_edge": true,
+    "val_top1_random_head": 1.2,
+    "val_top1_imprinted_head": 10.4,
+    "row_norm_random": 0.5765134124909806,
+    "row_norm_imprinted": 0.4771518693907947
+  },
+  "imprint_sha1": "04be022485be91faf22608b15c98f24e6fd08643",
+  "test_top1": 15.091509150915092,
+  "test_top5": 33.993399339933994,
+  "test_loss": 4.138920914257678,
+  "final_val_top1": 13.1,
+  "final_train_top1": 99.5,
+  "val_curve": [
+    [
+      5,
+      13.2,
+      84.5
+    ],
+    [
+      10,
+      13.7,
+      95.5
+    ],
+    [
+      15,
+      12.3,
+      99.0
+    ],
+    [
+      20,
+      13.1,
+      99.5
+    ],
+    [
+      25,
+      13.2,
+      100.0
+    ],
+    [
+      30,
+      12.1,
+      100.0
+    ],
+    [
+      35,
+      13.5,
+      100.0
+    ],
+    [
+      40,
+      12.6,
+      100.0
+    ],
+    [
+      45,
+      13.7,
+      100.0
+    ],
+    [
+      50,
+      13.1,
+      99.5
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      4.06,
+      4.115
+    ],
+    [
+      10,
+      4.065,
+      4.001
+    ],
+    [
+      15,
+      4.106,
+      3.953
+    ],
+    [
+      20,
+      4.152,
+      3.914
+    ],
+    [
+      25,
+      4.126,
+      3.902
+    ],
+    [
+      30,
+      4.149,
+      3.893
+    ],
+    [
+      35,
+      4.154,
+      3.896
+    ],
+    [
+      40,
+      4.155,
+      3.875
+    ],
+    [
+      45,
+      4.152,
+      3.884
+    ],
+    [
+      50,
+      4.152,
+      3.885
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 1110564,
+  "profiler_MB": 34.568648,
+  "profiler_act_MB": 3.311616,
+  "run_peak_incl_eval_MiB": 428.92578125,
+  "quantized_layers": 89,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "00396e79ce2e37e6af22faf64f96b1e87bc7ef04",
+  "head_init_sha1": "28f64f18966eae7dc3e1719a858236d38f087a9c",
+  "frozen_sha1": "d42ec08e5b4db89e99b4004aed38d26061e7ab4b",
+  "code_sha1": "8303141c6d9a008a37d593ee70fae0e83f1abbb7",
+  "setup_seconds": 13.417893409729004,
+  "train_seconds": 194.13301849365234,
+  "test_seconds": 19.882261276245117,
+  "gpu_util_at_start": "0 %, 1284 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}

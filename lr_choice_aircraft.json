@@ -1,0 +1,54 @@
+{
+  "dataset": "aircraft",
+  "lr": {
+    "LB": 0.0004,
+    "T3": 0.0004,
+    "last": 0.0016,
+    "T4": 0.0004,
+    "T2": 0.0004
+  },
+  "pilot": {
+    "LB": {
+      "mean_final_val": {
+        "0.0004": 26.4,
+        "0.0016": 23.0,
+        "0.0064": 4.9
+      },
+      "raw_best": 0.0004,
+      "chosen": 0.0004,
+      "raw_best_at_grid_edge": true,
+      "chosen_at_grid_edge": true,
+      "half_budget_gain_pp": 1.6
+    },
+    "T3": {
+      "mean_final_val": {
+        "0.0004": 26.6,
+        "0.0016": 24.9,
+        "0.0064": 24.1
+      },
+      "raw_best": 0.0004,
+      "chosen": 0.0004,
+      "raw_best_at_grid_edge": true,
+      "chosen_at_grid_edge": true,
+      "half_budget_gain_pp": 0.95
+    },
+    "last": {
+      "mean_final_val": {
+        "0.0004": 21.7,
+        "0.0016": 22.6,
+        "0.0064": 20.5
+      },
+      "raw_best": 0.0016,
+      "chosen": 0.0016,
+      "raw_best_at_grid_edge": false,
+      "chosen_at_grid_edge": false,
+      "half_budget_gain_pp": 2.05
+    }
+  },
+  "half_budget_flagged": [
+    "LB",
+    "last"
+  ],
+  "drop_lr": null,
+  "rule": "mean final-epoch val over seeds [100] (a diverged LR scores -inf); a non-upstream LR must beat 0.0016 by >= 1 pp; T4 and T2 take T3's LR"
+}

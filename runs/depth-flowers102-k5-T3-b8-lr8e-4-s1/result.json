@@ -1,0 +1,144 @@
+{
+  "name": "depth-flowers102-k5-T3-b8-lr8e-4-s1",
+  "dataset": "flowers102",
+  "k": 5,
+  "arm": "T3",
+  "batch": 8,
+  "lr": 0.0008,
+  "seed": 1,
+  "epochs": 50,
+  "val_every": 5,
+  "steps": 3200,
+  "n_train_images": 510,
+  "tag": "",
+  "test_top1": 85.49357619125061,
+  "test_top5": 95.26752317449991,
+  "test_loss": 2.3565013267525154,
+  "final_val_top1": 89.216,
+  "final_train_top1": 99.608,
+  "val_curve": [
+    [
+      5,
+      81.275,
+      97.059
+    ],
+    [
+      10,
+      83.431,
+      100.0
+    ],
+    [
+      15,
+      85.098,
+      99.608
+    ],
+    [
+      20,
+      87.353,
+      99.804
+    ],
+    [
+      25,
+      86.863,
+      99.804
+    ],
+    [
+      30,
+      87.059,
+      100.0
+    ],
+    [
+      35,
+      88.529,
+      100.0
+    ],
+    [
+      40,
+      89.706,
+      99.412
+    ],
+    [
+      45,
+      88.922,
+      100.0
+    ],
+    [
+      50,
+      89.216,
+      99.608
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      2.345,
+      3.999
+    ],
+    [
+      10,
+      2.327,
+      3.924
+    ],
+    [
+      15,
+      2.298,
+      3.904
+    ],
+    [
+      20,
+      2.296,
+      3.889
+    ],
+    [
+      25,
+      2.25,
+      3.875
+    ],
+    [
+      30,
+      2.26,
+      3.865
+    ],
+    [
+      35,
+      2.272,
+      3.861
+    ],
+    [
+      40,
+      2.275,
+      3.86
+    ],
+    [
+      45,
+      2.264,
+      3.855
+    ],
+    [
+      50,
+      2.273,
+      3.853
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 1578246,
+  "profiler_MB": 35.974256,
+  "profiler_act_MB": 3.311616,
+  "run_peak_incl_eval_MiB": 482.45166015625,
+  "quantized_layers": 81,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "d1a3caa2b7f977e7062b6b0279d39d5fbbb3810a",
+  "head_init_sha1": "697d56dbca8fbf98e6119b30bb625c36c28455e1",
+  "frozen_sha1": "fc3f518bc1861ee5a668b02f0fd0d331e8210791",
+  "code_sha1": "561952e367b7ff91ac59c4069ba4aaa2dd1f3b49",
+  "setup_seconds": 5.642561435699463,
+  "train_seconds": 301.8102753162384,
+  "test_seconds": 34.132314920425415,
+  "gpu_util_at_start": "2 %, 1587 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}

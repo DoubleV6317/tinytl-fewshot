@@ -1,0 +1,25 @@
+{
+  "k": 5,
+  "seed": 2,
+  "tag": "r1",
+  "ratios": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "epochs": 50,
+  "best_val_top1": 86.373,
+  "best_epoch": 30,
+  "final_val_top1": 85.686,
+  "test_top1": 84.92437794763376,
+  "test_top5": 95.25126036753943,
+  "test_loss": 2.3964117531040507,
+  "profiler_memory_MB": 85.339312,
+  "profiler_act_MB": 9.338224,
+  "measured_peak_MiB": 734.85205078125,
+  "train_seconds": 572.8070306777954,
+  "n_train_images": 510
+}

@@ -1,0 +1,52 @@
+diff --git a/tinytl/tinytl/data_providers/fgvc_data_providers.py b/tinytl/tinytl/data_providers/fgvc_data_providers.py
+index dc7e3b4..7feba3e 100644
+--- a/tinytl/tinytl/data_providers/fgvc_data_providers.py
++++ b/tinytl/tinytl/data_providers/fgvc_data_providers.py
+@@ -66,7 +66,7 @@ class Flowers102DataProvider(FGVCDataProvider):
+ 
+ 	@property
+ 	def save_path(self):
+-		return os.path.expanduser('~/dataset/flowers102')
++		return os.environ['TINYTL_FLOWERS_PATH']
+ 
+ 
+ class Food101DataProvider(FGVCDataProvider):
+diff --git a/tinytl/tinytl/data_providers/fgvc_run_config.py b/tinytl/tinytl/data_providers/fgvc_run_config.py
+index 49de21e..1b9651c 100644
+--- a/tinytl/tinytl/data_providers/fgvc_run_config.py
++++ b/tinytl/tinytl/data_providers/fgvc_run_config.py
+@@ -13,7 +13,7 @@ class FGVCRunConfig(ImagenetRunConfig):
+                  dataset='flowers102', train_batch_size=256, test_batch_size=500, valid_size=None,
+                  opt_type='sgd', opt_param=None, weight_decay=4e-5, label_smoothing=0, no_decay_keys=None,
+                  mixup_alpha=None, model_init='he_fout', validation_frequency=1, print_frequency=10,
+-                 n_worker=32, resize_scale=0.08, distort_color='tf', image_size=224, fast_evaluation=True, **kwargs):
++                 n_worker=32, resize_scale=0.08, distort_color='tf', image_size=224, fast_evaluation=False, **kwargs):
+         super(FGVCRunConfig, self).__init__(
+             n_epochs, init_lr, lr_schedule_type, lr_schedule_param,
+             dataset, train_batch_size, test_batch_size, valid_size,
+diff --git a/tinytl/tinytl/utils/common_utils.py b/tinytl/tinytl/utils/common_utils.py
+index 3d55add..cb0eef3 100644
+--- a/tinytl/tinytl/utils/common_utils.py
++++ b/tinytl/tinytl/utils/common_utils.py
+@@ -43,7 +43,7 @@ def k_means_cpu(weight, n_clusters, init='k-means++', max_iter=50):
+     if n_clusters > weight.size:
+         n_clusters = weight.size
+ 
+-    k_means = KMeans(n_clusters=n_clusters, init=init, n_init=1, max_iter=max_iter, n_jobs=20)
++    k_means = KMeans(n_clusters=n_clusters, init=init, n_init=1, max_iter=max_iter)
+     k_means.fit(weight)
+ 
+     centroids = k_means.cluster_centers_
+diff --git a/tinytl/tinytl/utils/memory_cost_profiler.py b/tinytl/tinytl/utils/memory_cost_profiler.py
+index 9245eaf..b7edbca 100644
+--- a/tinytl/tinytl/utils/memory_cost_profiler.py
++++ b/tinytl/tinytl/utils/memory_cost_profiler.py
+@@ -5,7 +5,7 @@ from ofa.utils import Hswish, Hsigmoid, MyConv2d
+ 
+ from ofa.utils.layers import ResidualBlock
+ from torchvision.models.resnet import BasicBlock, Bottleneck
+-from torchvision.models.mobilenet import InvertedResidual
++from torchvision.models.mobilenetv2 import InvertedResidual
+ 
+ __all__ = ['count_model_size', 'count_activation_size', 'profile_memory_cost']
+ 

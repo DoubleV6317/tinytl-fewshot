@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "mode": "smoke",
+  "torch": "2.5.1+cu124",
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "peak_allocated_MiB": 703.1455078125,
+  "note": "Smoke accuracy is not a reproduction result. CUDA memory is not the paper memory estimate."
+}

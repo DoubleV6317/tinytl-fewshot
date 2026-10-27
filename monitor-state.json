@@ -1,0 +1,25 @@
+{
+  "active_run": "runs/train-tinytl-lite_residual+bias-seed0-20260910-211615",
+  "status": "running",
+  "worker_pid": 22928,
+  "launcher_pid": 9020,
+  "epochs": 50,
+  "method": "tinytl-lite_residual+bias",
+  "seed": 0,
+  "started_at": "2026-09-10T21:16:15-04:00",
+  "purpose": "Faithful reproduction of exp_scripts/batch8/flowers.sh. Paper target: 95.5 top-1, 37 MB memory_cost.",
+  "logs": [
+    "paper-50.stdout.log",
+    "paper-50.stderr.log"
+  ],
+  "resume_cmd": ".venv/Scripts/python.exe run.py --mode train --epochs 50 --resume-from runs/train-tinytl-lite_residual+bias-seed0-20260910-211615",
+  "paused_200_epoch_run": {
+    "path": "runs/train-tinytl-lite_residual+bias-seed0-20260910-205914",
+    "stopped_at_epoch": 18,
+    "checkpoint_intact": true,
+    "resume_cmd": ".venv/Scripts/python.exe run.py --mode train --epochs 200 --resume-from runs/train-tinytl-lite_residual+bias-seed0-20260910-205914",
+    "note": "Stopped deliberately to run the paper's 50-epoch config first. Extension experiment, not the reproduction number."
+  },
+  "open_risk": "powercfg STANDBYIDLE on AC is still 0x708 (30 min). An idle sleep killed the 2026-09-10 18:48 run at epoch 47.",
+  "updated_at": "2026-09-10T21:18:00-04:00"
+}

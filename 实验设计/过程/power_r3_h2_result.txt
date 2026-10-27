@@ -1,0 +1,13 @@
+t(0.965, 4) = 2.456
+sd 2.5 d  +0: not-catastrophic 0.95  catastrophic 0.00  undetermined 0.05  | within-2pp 0.35
+sd 2.5 d  -2: not-catastrophic 0.62  catastrophic 0.00  undetermined 0.38  | within-2pp 0.03
+sd 2.5 d  -3: not-catastrophic 0.35  catastrophic 0.00  undetermined 0.65  | within-2pp 0.01
+sd 2.5 d  -5: not-catastrophic 0.04  catastrophic 0.04  undetermined 0.93  | within-2pp 0.00
+sd 2.5 d  -7: not-catastrophic 0.00  catastrophic 0.35  undetermined 0.65  | within-2pp 0.00
+sd 2.5 d -10: not-catastrophic 0.00  catastrophic 0.95  undetermined 0.05  | within-2pp 0.00
+sd 3.5 d  +0: not-catastrophic 0.75  catastrophic 0.00  undetermined 0.25  | within-2pp 0.22
+sd 3.5 d  -2: not-catastrophic 0.39  catastrophic 0.00  undetermined 0.61  | within-2pp 0.03
+sd 3.5 d  -3: not-catastrophic 0.22  catastrophic 0.00  undetermined 0.78  | within-2pp 0.01
+sd 3.5 d  -5: not-catastrophic 0.03  catastrophic 0.03  undetermined 0.93  | within-2pp 0.00
+sd 3.5 d  -7: not-catastrophic 0.00  catastrophic 0.22  undetermined 0.78  | within-2pp 0.00
+sd 3.5 d -10: not-catastrophic 0.00  catastrophic 0.75  undetermined 0.25  | within-2pp 0.00

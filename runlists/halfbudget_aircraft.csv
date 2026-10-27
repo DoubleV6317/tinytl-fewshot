@@ -1,0 +1,2 @@
+block,dataset,k,arm,batch,lr,seed,epochs,val_every,tag,name
+half-budget,aircraft,5,last,8,0.0016,100,100,5,,depth-aircraft-k5-last-b8-lr1.6e-3-s100-e100

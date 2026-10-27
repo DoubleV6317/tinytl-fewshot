@@ -1,0 +1,5 @@
+block,dataset,k,arm,batch,lr,seed,epochs,val_every,tag,name,head_init
+smoke,flowers102,10,LB,8,0.0008,0,1,1,smoke4,depth-flowers102-k10-LB-b8-lr8e-4-s0-e1-v1-smoke4,random
+smoke,flowers102,2,last,8,0.0008,0,1,1,smoke4,depth-flowers102-k2-last-b8-lr8e-4-s0-e1-v1-imp-smoke4,imprint
+smoke,aircraft,2,T4,8,0.0004,0,1,1,smoke4,depth-aircraft-k2-T4-b8-lr4e-4-s0-e1-v1-imp-smoke4,imprint
+smoke,aircraft,10,last,8,0.0016,0,1,1,smoke4,depth-aircraft-k10-last-b8-lr1.6e-3-s0-e1-v1-smoke4,random

@@ -1,0 +1,44 @@
+{
+ "runs": [
+  {
+   "seed": 0,
+   "best_epoch": 28,
+   "best_val_top1": 87.451,
+   "final_val_top1": 87.255,
+   "stored_best_test_top1": 83.54203935599284,
+   "best_test_top1": 83.54203935599284,
+   "best_test_loss": 2.3993106354812546,
+   "final_test_top1": 84.07871198568873,
+   "final_test_loss": 2.4050100634477647,
+   "reproduces_stored": true,
+   "final_minus_best": 0.5366726296958859
+  },
+  {
+   "seed": 1,
+   "best_epoch": 47,
+   "best_val_top1": 87.059,
+   "final_val_top1": 86.961,
+   "stored_best_test_top1": 83.70466742559766,
+   "best_test_top1": 83.70466742559766,
+   "best_test_loss": 2.4233739817311153,
+   "final_test_top1": 83.65587900471621,
+   "final_test_loss": 2.4224950645702372,
+   "reproduces_stored": true,
+   "final_minus_best": -0.048788420881450634
+  },
+  {
+   "seed": 2,
+   "best_epoch": 29,
+   "best_val_top1": 86.373,
+   "final_val_top1": 85.686,
+   "stored_best_test_top1": 81.72060497641893,
+   "best_test_top1": 81.70434216945844,
+   "best_test_loss": 2.454266649394486,
+   "final_test_top1": 82.2735404130753,
+   "final_test_loss": 2.4599172920497536,
+   "reproduces_stored": true,
+   "final_minus_best": 0.569198243616853
+  }
+ ],
+ "mean_final_minus_best": 0.3523608174770961
+}

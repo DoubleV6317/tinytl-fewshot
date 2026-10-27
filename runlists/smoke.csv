@@ -1,0 +1,7 @@
+block,dataset,k,arm,batch,lr,seed,epochs,val_every,tag,name
+smoke,flowers102,2,LB,8,0.0002,0,1,1,smoke2,depth-flowers102-k2-LB-b8-lr2e-4-s0-e1-v1-smoke2
+smoke,flowers102,2,T2,8,0.0002,0,1,1,smoke2,depth-flowers102-k2-T2-b8-lr2e-4-s0-e1-v1-smoke2
+smoke,flowers102,2,T3,8,0.0002,0,1,1,smoke2,depth-flowers102-k2-T3-b8-lr2e-4-s0-e1-v1-smoke2
+smoke,flowers102,2,T4,8,0.0002,0,1,1,smoke2,depth-flowers102-k2-T4-b8-lr2e-4-s0-e1-v1-smoke2
+smoke,flowers102,2,last,8,0.0002,0,1,1,smoke2,depth-flowers102-k2-last-b8-lr2e-4-s0-e1-v1-smoke2
+smoke,flowers102,2,LB,1,0.0003,0,1,1,smoke2,depth-flowers102-k2-LB-b1-lr3e-4-s0-e1-v1-smoke2

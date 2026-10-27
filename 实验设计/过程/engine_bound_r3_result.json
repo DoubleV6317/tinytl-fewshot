@@ -1,0 +1,202 @@
+[
+ {
+  "arm": "last",
+  "bs": 8,
+  "profiler_MB": 30.8,
+  "engine_profiler_basis_MB": 30.8,
+  "engine_resident_MiB": 48.7,
+  "act_peak_MiB": 24.5,
+  "saved_at_fwd_end_MiB": 0.0,
+  "measured_MiB": 67.4
+ },
+ {
+  "arm": "last",
+  "bs": 1,
+  "profiler_MB": 8.3,
+  "engine_profiler_basis_MB": 8.3,
+  "engine_resident_MiB": 23.2,
+  "act_peak_MiB": 3.1,
+  "saved_at_fwd_end_MiB": 0.0,
+  "measured_MiB": 25.1
+ },
+ {
+  "arm": "T4",
+  "bs": 8,
+  "profiler_MB": 34.6,
+  "engine_profiler_basis_MB": 38.9,
+  "engine_resident_MiB": 64.8,
+  "act_peak_MiB": 29.4,
+  "saved_at_fwd_end_MiB": 28.0,
+  "measured_MiB": 105.2
+ },
+ {
+  "arm": "T4",
+  "bs": 1,
+  "profiler_MB": 11.4,
+  "engine_profiler_basis_MB": 19.1,
+  "engine_resident_MiB": 41.9,
+  "act_peak_MiB": 10.5,
+  "saved_at_fwd_end_MiB": 10.5,
+  "measured_MiB": 51.8
+ },
+ {
+  "arm": "T3",
+  "bs": 8,
+  "profiler_MB": 36.0,
+  "engine_profiler_basis_MB": 66.2,
+  "engine_resident_MiB": 94.8,
+  "act_peak_MiB": 54.0,
+  "saved_at_fwd_end_MiB": 52.7,
+  "measured_MiB": 169.4
+ },
+ {
+  "arm": "T3",
+  "bs": 1,
+  "profiler_MB": 12.8,
+  "engine_profiler_basis_MB": 26.9,
+  "engine_resident_MiB": 53.4,
+  "act_peak_MiB": 16.6,
+  "saved_at_fwd_end_MiB": 16.6,
+  "measured_MiB": 66.5
+ },
+ {
+  "arm": "T2",
+  "bs": 8,
+  "profiler_MB": 36.8,
+  "engine_profiler_basis_MB": 90.4,
+  "engine_resident_MiB": 120.4,
+  "act_peak_MiB": 76.3,
+  "saved_at_fwd_end_MiB": 75.0,
+  "measured_MiB": 226.5
+ },
+ {
+  "arm": "T2",
+  "bs": 1,
+  "profiler_MB": 13.6,
+  "engine_profiler_basis_MB": 32.7,
+  "engine_resident_MiB": 61.3,
+  "act_peak_MiB": 21.3,
+  "saved_at_fwd_end_MiB": 21.3,
+  "measured_MiB": 78.5
+ },
+ {
+  "arm": "LB",
+  "bs": 8,
+  "profiler_MB": 37.1,
+  "engine_profiler_basis_MB": 221.5,
+  "engine_resident_MiB": 246.2,
+  "act_peak_MiB": 201.1,
+  "saved_at_fwd_end_MiB": 199.7,
+  "measured_MiB": 559.8
+ },
+ {
+  "arm": "LB",
+  "bs": 1,
+  "profiler_MB": 13.9,
+  "engine_profiler_basis_MB": 50.0,
+  "engine_resident_MiB": 78.7,
+  "act_peak_MiB": 37.6,
+  "saved_at_fwd_end_MiB": 37.6,
+  "measured_MiB": 122.5
+ },
+ {
+  "arm": "B",
+  "bs": 8,
+  "profiler_MB": 31.7,
+  "engine_profiler_basis_MB": 192.7,
+  "engine_resident_MiB": 203.2,
+  "act_peak_MiB": 178.8,
+  "saved_at_fwd_end_MiB": 177.4,
+  "measured_MiB": 537.1
+ },
+ {
+  "arm": "B",
+  "bs": 1,
+  "profiler_MB": 8.5,
+  "engine_profiler_basis_MB": 29.0,
+  "engine_resident_MiB": 43.1,
+  "act_peak_MiB": 22.7,
+  "saved_at_fwd_end_MiB": 22.7,
+  "measured_MiB": 101.7
+ },
+ {
+  "arm": "full",
+  "bs": 8,
+  "profiler_MB": 390.8,
+  "engine_profiler_basis_MB": 427.8,
+  "engine_resident_MiB": 466.9,
+  "act_peak_MiB": 389.9,
+  "saved_at_fwd_end_MiB": 388.5,
+  "measured_MiB": 599.7
+ },
+ {
+  "arm": "full",
+  "bs": 1,
+  "profiler_MB": 65.5,
+  "engine_profiler_basis_MB": 102.6,
+  "engine_resident_MiB": 152.7,
+  "act_peak_MiB": 79.7,
+  "saved_at_fwd_end_MiB": 79.7,
+  "measured_MiB": 158.6
+ },
+ {
+  "arm": "LB+aff",
+  "bs": 8,
+  "profiler_MB": 37.1,
+  "engine_profiler_basis_MB": 41.2,
+  "engine_resident_MiB": 74.2,
+  "act_peak_MiB": 29.2,
+  "saved_at_fwd_end_MiB": 27.4,
+  "measured_MiB": 385.2
+ },
+ {
+  "arm": "LB+aff",
+  "bs": 1,
+  "profiler_MB": 13.9,
+  "engine_profiler_basis_MB": 27.3,
+  "engine_resident_MiB": 57.0,
+  "act_peak_MiB": 16.0,
+  "saved_at_fwd_end_MiB": 16.0,
+  "measured_MiB": 100.6
+ },
+ {
+  "arm": "B+aff",
+  "bs": 8,
+  "profiler_MB": 31.7,
+  "engine_profiler_basis_MB": 31.7,
+  "engine_resident_MiB": 49.6,
+  "act_peak_MiB": 25.3,
+  "saved_at_fwd_end_MiB": 5.1,
+  "measured_MiB": 364.9
+ },
+ {
+  "arm": "B+aff",
+  "bs": 1,
+  "profiler_MB": 8.5,
+  "engine_profiler_basis_MB": 8.5,
+  "engine_resident_MiB": 23.5,
+  "act_peak_MiB": 3.2,
+  "saved_at_fwd_end_MiB": 1.1,
+  "measured_MiB": 79.2
+ },
+ {
+  "arm": "T3+aff",
+  "bs": 8,
+  "profiler_MB": 36.0,
+  "engine_profiler_basis_MB": 35.1,
+  "engine_resident_MiB": 65.2,
+  "act_peak_MiB": 24.5,
+  "saved_at_fwd_end_MiB": 14.2,
+  "measured_MiB": 130.0
+ },
+ {
+  "arm": "T3+aff",
+  "bs": 1,
+  "profiler_MB": 12.8,
+  "engine_profiler_basis_MB": 21.8,
+  "engine_resident_MiB": 48.4,
+  "act_peak_MiB": 11.8,
+  "saved_at_fwd_end_MiB": 11.8,
+  "measured_MiB": 62.2
+ }
+]

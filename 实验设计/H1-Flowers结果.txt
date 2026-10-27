@@ -1,0 +1,36 @@
+runs: 45
+pairing: subset and head-init hashes identical across arms at every seed; distinct subsets across seeds: 10
+diverged: [] | code_sha1 values: 1
+
+per-arm test top-1 (mean ± sd over seeds), final val, final train
+  LB   n=10 test 85.03 ± 0.80  val 87.29  train 99.9  mem 557 MiB
+  T2   n= 5 test 85.16 ± 0.51  val 87.39  train 99.8  mem 226 MiB
+  T3   n=10 test 85.46 ± 0.82  val 87.95  train 99.9  mem 169 MiB
+  T4   n=10 test 85.00 ± 0.60  val 87.25  train 99.9  mem 105 MiB
+  last n=10 test 78.89 ± 0.49  val 81.56  train 99.8  mem 67 MiB
+
+paired d = arm - LB (pp), 93% CI, margin 2 pp
+  T3   n=10 d=+0.43 sd=0.56 CI [+0.07, +0.80]  label: retains                               NI p=0.0000  per-seed: -0.5 +0.1 +0.5 +0.3 +0.7 +0.4 -0.3 +1.0 +1.1 +1.0
+  T4   n=10 d=-0.03 sd=0.63 CI [-0.44, +0.38]  label: retains                               NI p=0.0000  per-seed: -0.6 -0.9 +0.2 -0.0 +0.4 -0.5 -0.5 +1.1 -0.2 +0.7
+  last n=10 d=-6.14 sd=0.54 CI [-6.49, -5.79]  label: inferior by more than the margin      NI p=1.0000  per-seed: -6.1 -6.7 -5.4 -6.0 -6.3 -7.2 -6.4 -5.6 -6.2 -5.5
+  T2   n= 5 d=+0.33 sd=0.37 CI [-0.08, +0.73]  label: retains                               NI p=0.0001  per-seed: +0.0 -0.0 +0.2 +0.6 +0.8
+
+Holm over {T3, T4, last} retains claims, one-sided alpha 0.035:
+  T3   p=0.0000 vs 0.0117 -> retains (Holm)
+  T4   p=0.0000 vs 0.0175 -> retains (Holm)
+  last p=1.0000 vs 0.0350 -> not confirmed after Holm
+
+val vs test agreement on paired differences:
+  T3   val d = +0.66
+  T4   val d = -0.05
+  last val d = -5.74
+  T2   val d = +0.33
+
+half-budget gain (val 45/50 - 20/25), mean over main seeds:
+  LB   1.93
+  T3   1.87
+  T4   1.37
+  last 1.63
+  T2   1.90
+
+main block GPU time: 4.1 h over 45 runs

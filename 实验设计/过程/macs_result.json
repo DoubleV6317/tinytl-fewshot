@@ -1,0 +1,44 @@
+{
+ "last": {
+  "fwd": 394.6,
+  "bwd_in": 0.0,
+  "bwd_w": 0.1,
+  "bwd_total": 0.1
+ },
+ "T4": {
+  "fwd": 394.6,
+  "bwd_in": 115.4,
+  "bwd_w": 9.8,
+  "bwd_total": 125.2
+ },
+ "T3": {
+  "fwd": 394.6,
+  "bwd_in": 194.8,
+  "bwd_w": 32.4,
+  "bwd_total": 227.2
+ },
+ "T2": {
+  "fwd": 394.6,
+  "bwd_in": 251.3,
+  "bwd_w": 46.2,
+  "bwd_total": 297.5
+ },
+ "LB": {
+  "fwd": 394.6,
+  "bwd_in": 383.7,
+  "bwd_w": 75.4,
+  "bwd_total": 459.1
+ },
+ "B": {
+  "fwd": 394.6,
+  "bwd_in": 383.7,
+  "bwd_w": 0.1,
+  "bwd_total": 383.8
+ },
+ "full": {
+  "fwd": 394.6,
+  "bwd_in": 383.7,
+  "bwd_w": 394.6,
+  "bwd_total": 778.3
+ }
+}

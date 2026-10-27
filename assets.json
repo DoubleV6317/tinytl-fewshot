@@ -1,0 +1,18 @@
+{
+  "split": {
+    "train": 2040,
+    "val": 6149
+  },
+  "assets": [
+    {
+      "url": "https://hanlab18.mit.edu/files/proxylessNAS/proxyless_mobile.config",
+      "file": "proxyless_mobile.config",
+      "sha256": "eacb4259c46d97e8d47cd7920efe95b99e3004f3e97902c9b3ba80b2a414d8a6"
+    },
+    {
+      "url": "https://hanlab18.mit.edu/projects/tinyml/tinyTL/files/proxylessnas_mobile+lite_residual@imagenet@ws+gn",
+      "file": "proxylessnas_mobile+lite_residual@imagenet@ws+gn",
+      "sha256": "9d4244aeb0a47b9b7ff64692bd287b785c732ce39c53da243ade1694d1584fb0"
+    }
+  ]
+}

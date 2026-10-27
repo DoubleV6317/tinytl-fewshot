@@ -1,0 +1,1236 @@
+{
+ "meta": {
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "torch": "2.5.1+cu124",
+  "gpu_util_at_start": [
+   "4 %, 1656 MiB",
+   "3 %, 1601 MiB",
+   "4 %, 1609 MiB"
+  ],
+  "cudnn_benchmark": false
+ },
+ "table": [
+  {
+   "arm": "last",
+   "bs": 8,
+   "trainable": 130662,
+   "profiler_MB": 30.8,
+   "engine_profiler_basis_MB": 30.8,
+   "engine_resident_MiB": 48.7,
+   "measured_MiB": 67.4,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "linear": 0.0
+   }
+  },
+  {
+   "arm": "T5",
+   "bs": 8,
+   "trainable": 362598,
+   "profiler_MB": 32.3,
+   "engine_profiler_basis_MB": 31.5,
+   "engine_resident_MiB": 51.4,
+   "measured_MiB": 69.2,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T4",
+   "bs": 8,
+   "trainable": 1113126,
+   "profiler_MB": 34.6,
+   "engine_profiler_basis_MB": 38.9,
+   "engine_resident_MiB": 64.8,
+   "measured_MiB": 105.2,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "norm": 18.9,
+    "act": 16.8,
+    "conv": 32.4,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "T3",
+   "bs": 8,
+   "trainable": 1578246,
+   "profiler_MB": 36.0,
+   "engine_profiler_basis_MB": 66.2,
+   "engine_resident_MiB": 94.8,
+   "measured_MiB": 168.6,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "norm": 38.5,
+    "act": 33.4,
+    "conv": 56.0,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "T2",
+   "bs": 8,
+   "trainable": 1863766,
+   "profiler_MB": 36.8,
+   "engine_profiler_basis_MB": 90.4,
+   "engine_resident_MiB": 120.4,
+   "measured_MiB": 226.5,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T1",
+   "bs": 8,
+   "trainable": 1944182,
+   "profiler_MB": 37.1,
+   "engine_profiler_basis_MB": 130.8,
+   "engine_resident_MiB": 159.6,
+   "measured_MiB": 328.7,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T0",
+   "bs": 8,
+   "trainable": 1962230,
+   "profiler_MB": 37.1,
+   "engine_profiler_basis_MB": 188.6,
+   "engine_resident_MiB": 214.8,
+   "measured_MiB": 471.4,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "LB",
+   "bs": 8,
+   "trainable": 1962310,
+   "profiler_MB": 37.1,
+   "engine_profiler_basis_MB": 221.5,
+   "engine_resident_MiB": 246.2,
+   "measured_MiB": 557.2,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "norm": 172.3,
+    "act": 146.3,
+    "conv": 192.6,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "B",
+   "bs": 8,
+   "trainable": 149622,
+   "profiler_MB": 31.7,
+   "engine_profiler_basis_MB": 192.7,
+   "engine_resident_MiB": 203.2,
+   "measured_MiB": 536.4,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "norm": 172.3,
+    "act": 146.3,
+    "conv": 185.7,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "full",
+   "bs": 8,
+   "trainable": 4746590,
+   "profiler_MB": 390.8,
+   "engine_profiler_basis_MB": 427.8,
+   "engine_resident_MiB": 466.9,
+   "measured_MiB": 601.3,
+   "measured_range_MiB": 0.0,
+   "saved_MiB": {
+    "conv": 207.9,
+    "norm": 172.3,
+    "act": 146.3,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "LB+aff",
+   "bs": 8,
+   "trainable": 1962310,
+   "profiler_MB": 37.1,
+   "engine_profiler_basis_MB": 48.8,
+   "engine_resident_MiB": 81.5,
+   "measured_MiB": 392.9,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "B+aff",
+   "bs": 8,
+   "trainable": 149622,
+   "profiler_MB": 31.7,
+   "engine_profiler_basis_MB": 31.7,
+   "engine_resident_MiB": 49.7,
+   "measured_MiB": 364.9,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T3+aff",
+   "bs": 8,
+   "trainable": 1578246,
+   "profiler_MB": 36.0,
+   "engine_profiler_basis_MB": 35.2,
+   "engine_resident_MiB": 65.3,
+   "measured_MiB": 133.4,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "last",
+   "bs": 1,
+   "trainable": 130662,
+   "profiler_MB": 8.3,
+   "engine_profiler_basis_MB": 8.3,
+   "engine_resident_MiB": 23.2,
+   "measured_MiB": 25.9,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T5",
+   "bs": 1,
+   "trainable": 362598,
+   "profiler_MB": 9.1,
+   "engine_profiler_basis_MB": 9.0,
+   "engine_resident_MiB": 25.9,
+   "measured_MiB": 30.9,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T4",
+   "bs": 1,
+   "trainable": 1113126,
+   "profiler_MB": 11.4,
+   "engine_profiler_basis_MB": 19.1,
+   "engine_resident_MiB": 41.9,
+   "measured_MiB": 52.1,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T3",
+   "bs": 1,
+   "trainable": 1578246,
+   "profiler_MB": 12.8,
+   "engine_profiler_basis_MB": 26.9,
+   "engine_resident_MiB": 53.4,
+   "measured_MiB": 67.2,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T2",
+   "bs": 1,
+   "trainable": 1863766,
+   "profiler_MB": 13.6,
+   "engine_profiler_basis_MB": 32.7,
+   "engine_resident_MiB": 61.3,
+   "measured_MiB": 79.0,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T1",
+   "bs": 1,
+   "trainable": 1944182,
+   "profiler_MB": 13.9,
+   "engine_profiler_basis_MB": 38.5,
+   "engine_resident_MiB": 67.6,
+   "measured_MiB": 92.7,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T0",
+   "bs": 1,
+   "trainable": 1962230,
+   "profiler_MB": 13.9,
+   "engine_profiler_basis_MB": 45.9,
+   "engine_resident_MiB": 74.8,
+   "measured_MiB": 110.8,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "LB",
+   "bs": 1,
+   "trainable": 1962310,
+   "profiler_MB": 13.9,
+   "engine_profiler_basis_MB": 50.0,
+   "engine_resident_MiB": 78.7,
+   "measured_MiB": 122.1,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "B",
+   "bs": 1,
+   "trainable": 149622,
+   "profiler_MB": 8.5,
+   "engine_profiler_basis_MB": 29.0,
+   "engine_resident_MiB": 43.1,
+   "measured_MiB": 101.3,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "full",
+   "bs": 1,
+   "trainable": 4746590,
+   "profiler_MB": 65.5,
+   "engine_profiler_basis_MB": 102.6,
+   "engine_resident_MiB": 152.7,
+   "measured_MiB": 158.8,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "LB+aff",
+   "bs": 1,
+   "trainable": 1962310,
+   "profiler_MB": 13.9,
+   "engine_profiler_basis_MB": 28.3,
+   "engine_resident_MiB": 58.0,
+   "measured_MiB": 102.1,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "B+aff",
+   "bs": 1,
+   "trainable": 149622,
+   "profiler_MB": 8.5,
+   "engine_profiler_basis_MB": 8.5,
+   "engine_resident_MiB": 23.6,
+   "measured_MiB": 80.4,
+   "measured_range_MiB": 0.0
+  },
+  {
+   "arm": "T3+aff",
+   "bs": 1,
+   "trainable": 1578246,
+   "profiler_MB": 12.8,
+   "engine_profiler_basis_MB": 22.1,
+   "engine_resident_MiB": 48.7,
+   "measured_MiB": 62.8,
+   "measured_range_MiB": 0.0
+  }
+ ],
+ "raw": [
+  {
+   "worker": 0,
+   "gpu_util_at_start": "4 %, 1656 MiB",
+   "gpu": "NVIDIA GeForce RTX 3060",
+   "torch": "2.5.1+cu124",
+   "rows": [
+    {
+     "arm": "last",
+     "bs": 8,
+     "trainable": 130662,
+     "position": 1,
+     "measured_MiB": 67.4072265625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 8,
+     "trainable": 362598,
+     "position": 2,
+     "measured_MiB": 69.1787109375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 8,
+     "trainable": 1113126,
+     "position": 3,
+     "measured_MiB": 105.1845703125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 4,
+     "measured_MiB": 168.580078125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 8,
+     "trainable": 1863766,
+     "position": 5,
+     "measured_MiB": 226.529296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 8,
+     "trainable": 1944182,
+     "position": 6,
+     "measured_MiB": 328.68408203125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T0",
+     "bs": 8,
+     "trainable": 1962230,
+     "position": 7,
+     "measured_MiB": 471.3896484375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 8,
+     "measured_MiB": 557.16552734375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 9,
+     "measured_MiB": 536.36328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 8,
+     "trainable": 4746590,
+     "position": 10,
+     "measured_MiB": 601.30029296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 11,
+     "measured_MiB": 392.90380859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 12,
+     "measured_MiB": 364.93603515625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3+aff",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 13,
+     "measured_MiB": 133.4267578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "last",
+     "bs": 1,
+     "trainable": 130662,
+     "position": 14,
+     "measured_MiB": 25.8701171875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 1,
+     "trainable": 362598,
+     "position": 15,
+     "measured_MiB": 30.8642578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 1,
+     "trainable": 1113126,
+     "position": 16,
+     "measured_MiB": 52.091796875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 17,
+     "measured_MiB": 67.22607421875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 1,
+     "trainable": 1863766,
+     "position": 18,
+     "measured_MiB": 79.01806640625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 1,
+     "trainable": 1944182,
+     "position": 19,
+     "measured_MiB": 92.7490234375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T0",
+     "bs": 1,
+     "trainable": 1962230,
+     "position": 20,
+     "measured_MiB": 110.755859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 21,
+     "measured_MiB": 122.099609375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 22,
+     "measured_MiB": 101.29736328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 1,
+     "trainable": 4746590,
+     "position": 23,
+     "measured_MiB": 158.77001953125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 24,
+     "measured_MiB": 102.1298828125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 25,
+     "measured_MiB": 80.4248046875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3+aff",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 26,
+     "measured_MiB": 62.84521484375,
+     "spread_MiB": 0.0
+    }
+   ]
+  },
+  {
+   "worker": 1,
+   "gpu_util_at_start": "3 %, 1601 MiB",
+   "gpu": "NVIDIA GeForce RTX 3060",
+   "torch": "2.5.1+cu124",
+   "rows": [
+    {
+     "arm": "T3+aff",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 1,
+     "measured_MiB": 133.4267578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 2,
+     "measured_MiB": 364.93603515625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 3,
+     "measured_MiB": 392.90380859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 8,
+     "trainable": 4746590,
+     "position": 4,
+     "measured_MiB": 601.30029296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 5,
+     "measured_MiB": 536.36328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 6,
+     "measured_MiB": 557.16552734375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T0",
+     "bs": 8,
+     "trainable": 1962230,
+     "position": 7,
+     "measured_MiB": 471.3896484375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 8,
+     "trainable": 1944182,
+     "position": 8,
+     "measured_MiB": 328.68408203125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 8,
+     "trainable": 1863766,
+     "position": 9,
+     "measured_MiB": 226.529296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 10,
+     "measured_MiB": 168.580078125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 8,
+     "trainable": 1113126,
+     "position": 11,
+     "measured_MiB": 105.1845703125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 8,
+     "trainable": 362598,
+     "position": 12,
+     "measured_MiB": 69.1787109375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "last",
+     "bs": 8,
+     "trainable": 130662,
+     "position": 13,
+     "measured_MiB": 67.4072265625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3+aff",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 14,
+     "measured_MiB": 62.84521484375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 15,
+     "measured_MiB": 80.4248046875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 16,
+     "measured_MiB": 102.1298828125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 1,
+     "trainable": 4746590,
+     "position": 17,
+     "measured_MiB": 158.77001953125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 18,
+     "measured_MiB": 101.29736328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 19,
+     "measured_MiB": 122.099609375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T0",
+     "bs": 1,
+     "trainable": 1962230,
+     "position": 20,
+     "measured_MiB": 110.755859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 1,
+     "trainable": 1944182,
+     "position": 21,
+     "measured_MiB": 92.7490234375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 1,
+     "trainable": 1863766,
+     "position": 22,
+     "measured_MiB": 79.01806640625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 23,
+     "measured_MiB": 67.22607421875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 1,
+     "trainable": 1113126,
+     "position": 24,
+     "measured_MiB": 52.091796875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 1,
+     "trainable": 362598,
+     "position": 25,
+     "measured_MiB": 30.8642578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "last",
+     "bs": 1,
+     "trainable": 130662,
+     "position": 26,
+     "measured_MiB": 25.8701171875,
+     "spread_MiB": 0.0
+    }
+   ]
+  },
+  {
+   "worker": 2,
+   "gpu_util_at_start": "4 %, 1609 MiB",
+   "gpu": "NVIDIA GeForce RTX 3060",
+   "torch": "2.5.1+cu124",
+   "rows": [
+    {
+     "arm": "T0",
+     "bs": 8,
+     "trainable": 1962230,
+     "position": 1,
+     "measured_MiB": 471.3896484375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 2,
+     "measured_MiB": 557.16552734375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 3,
+     "measured_MiB": 536.36328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 8,
+     "trainable": 4746590,
+     "position": 4,
+     "measured_MiB": 601.30029296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 8,
+     "trainable": 1962310,
+     "position": 5,
+     "measured_MiB": 392.90380859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 8,
+     "trainable": 149622,
+     "position": 6,
+     "measured_MiB": 364.93603515625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3+aff",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 7,
+     "measured_MiB": 133.4267578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "last",
+     "bs": 8,
+     "trainable": 130662,
+     "position": 8,
+     "measured_MiB": 67.4072265625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 8,
+     "trainable": 362598,
+     "position": 9,
+     "measured_MiB": 69.1787109375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 8,
+     "trainable": 1113126,
+     "position": 10,
+     "measured_MiB": 105.1845703125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 8,
+     "trainable": 1578246,
+     "position": 11,
+     "measured_MiB": 168.580078125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 8,
+     "trainable": 1863766,
+     "position": 12,
+     "measured_MiB": 226.529296875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 8,
+     "trainable": 1944182,
+     "position": 13,
+     "measured_MiB": 328.68408203125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T0",
+     "bs": 1,
+     "trainable": 1962230,
+     "position": 14,
+     "measured_MiB": 110.755859375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 15,
+     "measured_MiB": 122.099609375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 16,
+     "measured_MiB": 101.29736328125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "full",
+     "bs": 1,
+     "trainable": 4746590,
+     "position": 17,
+     "measured_MiB": 158.77001953125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "LB+aff",
+     "bs": 1,
+     "trainable": 1962310,
+     "position": 18,
+     "measured_MiB": 102.1298828125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "B+aff",
+     "bs": 1,
+     "trainable": 149622,
+     "position": 19,
+     "measured_MiB": 80.4248046875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3+aff",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 20,
+     "measured_MiB": 62.84521484375,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "last",
+     "bs": 1,
+     "trainable": 130662,
+     "position": 21,
+     "measured_MiB": 25.8701171875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T5",
+     "bs": 1,
+     "trainable": 362598,
+     "position": 22,
+     "measured_MiB": 30.8642578125,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T4",
+     "bs": 1,
+     "trainable": 1113126,
+     "position": 23,
+     "measured_MiB": 52.091796875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T3",
+     "bs": 1,
+     "trainable": 1578246,
+     "position": 24,
+     "measured_MiB": 67.22607421875,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T2",
+     "bs": 1,
+     "trainable": 1863766,
+     "position": 25,
+     "measured_MiB": 79.01806640625,
+     "spread_MiB": 0.0
+    },
+    {
+     "arm": "T1",
+     "bs": 1,
+     "trainable": 1944182,
+     "position": 26,
+     "measured_MiB": 92.7490234375,
+     "spread_MiB": 0.0
+    }
+   ]
+  }
+ ],
+ "details": [
+  {
+   "arm": "last",
+   "bs": 8,
+   "trainable": 130662,
+   "profiler_MB": 30.8,
+   "engine_act_peak_MiB": 24.5,
+   "engine_resident_MiB": 48.7,
+   "engine_profiler_basis_MB": 30.8,
+   "saved_MiB": {
+    "linear": 0.0
+   }
+  },
+  {
+   "arm": "T5",
+   "bs": 8,
+   "trainable": 362598,
+   "profiler_MB": 32.3,
+   "engine_act_peak_MiB": 24.5,
+   "engine_resident_MiB": 51.4,
+   "engine_profiler_basis_MB": 31.5
+  },
+  {
+   "arm": "T4",
+   "bs": 8,
+   "trainable": 1113126,
+   "profiler_MB": 34.6,
+   "engine_act_peak_MiB": 29.4,
+   "engine_resident_MiB": 64.8,
+   "engine_profiler_basis_MB": 38.9,
+   "saved_MiB": {
+    "norm": 18.9,
+    "act": 16.8,
+    "conv": 32.4,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "T3",
+   "bs": 8,
+   "trainable": 1578246,
+   "profiler_MB": 36.0,
+   "engine_act_peak_MiB": 54.0,
+   "engine_resident_MiB": 94.8,
+   "engine_profiler_basis_MB": 66.2,
+   "saved_MiB": {
+    "norm": 38.5,
+    "act": 33.4,
+    "conv": 56.0,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "T2",
+   "bs": 8,
+   "trainable": 1863766,
+   "profiler_MB": 36.8,
+   "engine_act_peak_MiB": 76.3,
+   "engine_resident_MiB": 120.4,
+   "engine_profiler_basis_MB": 90.4
+  },
+  {
+   "arm": "T1",
+   "bs": 8,
+   "trainable": 1944182,
+   "profiler_MB": 37.1,
+   "engine_act_peak_MiB": 114.7,
+   "engine_resident_MiB": 159.6,
+   "engine_profiler_basis_MB": 130.8
+  },
+  {
+   "arm": "T0",
+   "bs": 8,
+   "trainable": 1962230,
+   "profiler_MB": 37.1,
+   "engine_act_peak_MiB": 169.7,
+   "engine_resident_MiB": 214.8,
+   "engine_profiler_basis_MB": 188.6
+  },
+  {
+   "arm": "LB",
+   "bs": 8,
+   "trainable": 1962310,
+   "profiler_MB": 37.1,
+   "engine_act_peak_MiB": 201.1,
+   "engine_resident_MiB": 246.2,
+   "engine_profiler_basis_MB": 221.5,
+   "saved_MiB": {
+    "norm": 172.3,
+    "act": 146.3,
+    "conv": 192.6,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "B",
+   "bs": 8,
+   "trainable": 149622,
+   "profiler_MB": 31.7,
+   "engine_act_peak_MiB": 178.8,
+   "engine_resident_MiB": 203.2,
+   "engine_profiler_basis_MB": 192.7,
+   "saved_MiB": {
+    "norm": 172.3,
+    "act": 146.3,
+    "conv": 185.7,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "full",
+   "bs": 8,
+   "trainable": 4746590,
+   "profiler_MB": 390.8,
+   "engine_act_peak_MiB": 389.9,
+   "engine_resident_MiB": 466.9,
+   "engine_profiler_basis_MB": 427.8,
+   "saved_MiB": {
+    "conv": 207.9,
+    "norm": 172.3,
+    "act": 146.3,
+    "other": 0.0,
+    "linear": 0.5
+   }
+  },
+  {
+   "arm": "LB+aff",
+   "bs": 8,
+   "trainable": 1962310,
+   "profiler_MB": 37.1,
+   "engine_act_peak_MiB": 36.4,
+   "engine_resident_MiB": 81.5,
+   "engine_profiler_basis_MB": 48.8
+  },
+  {
+   "arm": "B+aff",
+   "bs": 8,
+   "trainable": 149622,
+   "profiler_MB": 31.7,
+   "engine_act_peak_MiB": 25.3,
+   "engine_resident_MiB": 49.7,
+   "engine_profiler_basis_MB": 31.7
+  },
+  {
+   "arm": "T3+aff",
+   "bs": 8,
+   "trainable": 1578246,
+   "profiler_MB": 36.0,
+   "engine_act_peak_MiB": 24.5,
+   "engine_resident_MiB": 65.3,
+   "engine_profiler_basis_MB": 35.2
+  },
+  {
+   "arm": "last",
+   "bs": 1,
+   "trainable": 130662,
+   "profiler_MB": 8.3,
+   "engine_act_peak_MiB": 3.1,
+   "engine_resident_MiB": 23.2,
+   "engine_profiler_basis_MB": 8.3
+  },
+  {
+   "arm": "T5",
+   "bs": 1,
+   "trainable": 362598,
+   "profiler_MB": 9.1,
+   "engine_act_peak_MiB": 3.1,
+   "engine_resident_MiB": 25.9,
+   "engine_profiler_basis_MB": 9.0
+  },
+  {
+   "arm": "T4",
+   "bs": 1,
+   "trainable": 1113126,
+   "profiler_MB": 11.4,
+   "engine_act_peak_MiB": 10.5,
+   "engine_resident_MiB": 41.9,
+   "engine_profiler_basis_MB": 19.1
+  },
+  {
+   "arm": "T3",
+   "bs": 1,
+   "trainable": 1578246,
+   "profiler_MB": 12.8,
+   "engine_act_peak_MiB": 16.6,
+   "engine_resident_MiB": 53.4,
+   "engine_profiler_basis_MB": 26.9
+  },
+  {
+   "arm": "T2",
+   "bs": 1,
+   "trainable": 1863766,
+   "profiler_MB": 13.6,
+   "engine_act_peak_MiB": 21.3,
+   "engine_resident_MiB": 61.3,
+   "engine_profiler_basis_MB": 32.7
+  },
+  {
+   "arm": "T1",
+   "bs": 1,
+   "trainable": 1944182,
+   "profiler_MB": 13.9,
+   "engine_act_peak_MiB": 26.6,
+   "engine_resident_MiB": 67.6,
+   "engine_profiler_basis_MB": 38.5
+  },
+  {
+   "arm": "T0",
+   "bs": 1,
+   "trainable": 1962230,
+   "profiler_MB": 13.9,
+   "engine_act_peak_MiB": 33.6,
+   "engine_resident_MiB": 74.8,
+   "engine_profiler_basis_MB": 45.9
+  },
+  {
+   "arm": "LB",
+   "bs": 1,
+   "trainable": 1962310,
+   "profiler_MB": 13.9,
+   "engine_act_peak_MiB": 37.6,
+   "engine_resident_MiB": 78.7,
+   "engine_profiler_basis_MB": 50.0
+  },
+  {
+   "arm": "B",
+   "bs": 1,
+   "trainable": 149622,
+   "profiler_MB": 8.5,
+   "engine_act_peak_MiB": 22.7,
+   "engine_resident_MiB": 43.1,
+   "engine_profiler_basis_MB": 29.0
+  },
+  {
+   "arm": "full",
+   "bs": 1,
+   "trainable": 4746590,
+   "profiler_MB": 65.5,
+   "engine_act_peak_MiB": 79.7,
+   "engine_resident_MiB": 152.7,
+   "engine_profiler_basis_MB": 102.6
+  },
+  {
+   "arm": "LB+aff",
+   "bs": 1,
+   "trainable": 1962310,
+   "profiler_MB": 13.9,
+   "engine_act_peak_MiB": 16.9,
+   "engine_resident_MiB": 58.0,
+   "engine_profiler_basis_MB": 28.3
+  },
+  {
+   "arm": "B+aff",
+   "bs": 1,
+   "trainable": 149622,
+   "profiler_MB": 8.5,
+   "engine_act_peak_MiB": 3.2,
+   "engine_resident_MiB": 23.6,
+   "engine_profiler_basis_MB": 8.5
+  },
+  {
+   "arm": "T3+aff",
+   "bs": 1,
+   "trainable": 1578246,
+   "profiler_MB": 12.8,
+   "engine_act_peak_MiB": 12.0,
+   "engine_resident_MiB": 48.7,
+   "engine_profiler_basis_MB": 22.1
+  }
+ ]
+}

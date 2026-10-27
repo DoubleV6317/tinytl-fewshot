@@ -1,0 +1,159 @@
+{
+  "name": "depth-flowers102-k2-last-b8-lr8e-4-s1-imp",
+  "dataset": "flowers102",
+  "k": 2,
+  "arm": "last",
+  "batch": 8,
+  "lr": 0.0008,
+  "seed": 1,
+  "epochs": 50,
+  "val_every": 5,
+  "steps": 1300,
+  "n_train_images": 204,
+  "tag": "",
+  "head_init": "imprint",
+  "imprint": {
+    "tau": 102.32929922807536,
+    "tau_at_grid_edge": false,
+    "support_loss": 4.050288534162632,
+    "support_top1": 100.0,
+    "loo_top1": 22.54901960784314,
+    "loo_tau": 54.954087385762456,
+    "loo_tau_at_grid_edge": false,
+    "val_top1_random_head": 0.6862745098039216,
+    "val_top1_imprinted_head": 60.0,
+    "row_norm_random": 0.5765441210357374,
+    "row_norm_imprinted": 0.3984578292439802
+  },
+  "imprint_sha1": "b3f9cb27c711167ef4d9eb8b0d8e8a075c5864bd",
+  "test_top1": 65.83184257602862,
+  "test_top5": 86.0302488209465,
+  "test_loss": 3.035110712943183,
+  "final_val_top1": 66.078,
+  "final_train_top1": 100.0,
+  "val_curve": [
+    [
+      5,
+      62.059,
+      99.02
+    ],
+    [
+      10,
+      63.235,
+      99.51
+    ],
+    [
+      15,
+      63.431,
+      99.51
+    ],
+    [
+      20,
+      64.51,
+      99.51
+    ],
+    [
+      25,
+      64.51,
+      100.0
+    ],
+    [
+      30,
+      65.784,
+      100.0
+    ],
+    [
+      35,
+      65.98,
+      100.0
+    ],
+    [
+      40,
+      65.686,
+      100.0
+    ],
+    [
+      45,
+      65.98,
+      100.0
+    ],
+    [
+      50,
+      66.078,
+      100.0
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      2.955,
+      3.98
+    ],
+    [
+      10,
+      2.953,
+      3.937
+    ],
+    [
+      15,
+      2.985,
+      3.922
+    ],
+    [
+      20,
+      2.982,
+      3.906
+    ],
+    [
+      25,
+      2.971,
+      3.906
+    ],
+    [
+      30,
+      2.998,
+      3.894
+    ],
+    [
+      35,
+      2.997,
+      3.886
+    ],
+    [
+      40,
+      3.002,
+      3.889
+    ],
+    [
+      45,
+      2.995,
+      3.884
+    ],
+    [
+      50,
+      2.995,
+      3.885
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 130662,
+  "profiler_MB": 30.828688,
+  "profiler_act_MB": 3.211264,
+  "run_peak_incl_eval_MiB": 417.70361328125,
+  "quantized_layers": 99,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "03f3b5e0f51965ec6c809a5d6fe206d480d4c226",
+  "head_init_sha1": "697d56dbca8fbf98e6119b30bb625c36c28455e1",
+  "frozen_sha1": "a5a7d5cda59fb6f537a95b7e274709fc7a05f13d",
+  "code_sha1": "8303141c6d9a008a37d593ee70fae0e83f1abbb7",
+  "setup_seconds": 12.050769567489624,
+  "train_seconds": 118.24066591262817,
+  "test_seconds": 30.538928508758545,
+  "gpu_util_at_start": "0 %, 1283 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}

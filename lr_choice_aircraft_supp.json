@@ -1,0 +1,47 @@
+{
+  "dataset": "aircraft",
+  "lr": {
+    "LB": 0.0004,
+    "T3": 0.0004,
+    "last": 0.0016,
+    "T4": 0.0004,
+    "T2": 0.0004
+  },
+  "base": {
+    "LB": 0.0004,
+    "T3": 0.0004,
+    "last": 0.0016,
+    "T4": 0.0004,
+    "T2": 0.0004
+  },
+  "changed": [],
+  "pilot": {
+    "LB": {
+      "mean_final_val": {
+        "0.0001": 23.1,
+        "0.0002": 25.0,
+        "0.0004": 26.4,
+        "0.0016": 23.0,
+        "0.0064": 4.9
+      },
+      "frozen": 0.0004,
+      "raw_best": 0.0004,
+      "chosen": 0.0004,
+      "chosen_at_grid_edge": false
+    },
+    "T3": {
+      "mean_final_val": {
+        "0.0001": 23.4,
+        "0.0002": 24.9,
+        "0.0004": 26.6,
+        "0.0016": 24.9,
+        "0.0064": 24.1
+      },
+      "frozen": 0.0004,
+      "raw_best": 0.0004,
+      "chosen": 0.0004,
+      "chosen_at_grid_edge": false
+    }
+  },
+  "rule": "extended grid, mean final val on the pilot seeds; switch only if >= 1 pp above the frozen LR; T4 and T2 take T3's LR"
+}

@@ -1,0 +1,147 @@
+{
+  "name": "depth-aircraft-k10-last-b8-lr1.6e-3-s0",
+  "dataset": "aircraft",
+  "k": 10,
+  "arm": "last",
+  "batch": 8,
+  "lr": 0.0016,
+  "seed": 0,
+  "epochs": 50,
+  "val_every": 5,
+  "steps": 6250,
+  "n_train_images": 1000,
+  "tag": "",
+  "head_init": "random",
+  "imprint": null,
+  "imprint_sha1": null,
+  "test_top1": 28.712871287128714,
+  "test_top5": 54.75547554755475,
+  "test_loss": 3.6129297146452393,
+  "final_val_top1": 29.8,
+  "final_train_top1": 80.2,
+  "val_curve": [
+    [
+      5,
+      18.8,
+      36.3
+    ],
+    [
+      10,
+      20.5,
+      53.1
+    ],
+    [
+      15,
+      24.8,
+      60.9
+    ],
+    [
+      20,
+      25.7,
+      65.3
+    ],
+    [
+      25,
+      27.3,
+      70.5
+    ],
+    [
+      30,
+      27.4,
+      72.9
+    ],
+    [
+      35,
+      28.3,
+      76.3
+    ],
+    [
+      40,
+      29.2,
+      78.0
+    ],
+    [
+      45,
+      29.9,
+      80.5
+    ],
+    [
+      50,
+      29.8,
+      80.2
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      3.787,
+      4.416
+    ],
+    [
+      10,
+      3.72,
+      4.335
+    ],
+    [
+      15,
+      3.671,
+      4.303
+    ],
+    [
+      20,
+      3.654,
+      4.272
+    ],
+    [
+      25,
+      3.626,
+      4.247
+    ],
+    [
+      30,
+      3.627,
+      4.225
+    ],
+    [
+      35,
+      3.619,
+      4.198
+    ],
+    [
+      40,
+      3.606,
+      4.186
+    ],
+    [
+      45,
+      3.603,
+      4.176
+    ],
+    [
+      50,
+      3.603,
+      4.168
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 128100,
+  "profiler_MB": 30.81844,
+  "profiler_act_MB": 3.211264,
+  "run_peak_incl_eval_MiB": 465.619140625,
+  "quantized_layers": 99,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "25f015759c9c38c04ac6ff1326526f5acabba009",
+  "head_init_sha1": "517c552c90b6b74344fe7ebfb76e3c16f9b81d90",
+  "frozen_sha1": "a5a7d5cda59fb6f537a95b7e274709fc7a05f13d",
+  "code_sha1": "8303141c6d9a008a37d593ee70fae0e83f1abbb7",
+  "setup_seconds": 5.035198450088501,
+  "train_seconds": 692.0490815639496,
+  "test_seconds": 19.931763648986816,
+  "gpu_util_at_start": "0 %, 1293 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}

@@ -1,0 +1,9 @@
+﻿{
+    "launched_at":  "2026-09-10T21:16:12.2324709-04:00",
+    "seed":  0,
+    "pid":  9020,
+    "method":  "tinytl-lite_residual+bias",
+    "epochs":  50,
+    "status":  "launched",
+    "protocol":  "Faithful reproduction of exp_scripts/batch8/flowers.sh. Paper target: 95.5 top-1, 37 MB."
+}

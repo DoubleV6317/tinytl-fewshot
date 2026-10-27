@@ -1,0 +1,137 @@
+{
+ "nvidia_smi_at_start": "36 %, 1814 MiB",
+ "rows": [
+  {
+   "arm": "LB",
+   "bs": 8,
+   "profiler_MB": 37.126448,
+   "peak_MiB": 573.41552734375,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.15576171875,
+   "trainable": 1962310,
+   "saved_MiB": null,
+   "position_in_process": 1
+  },
+  {
+   "arm": "T3",
+   "bs": 8,
+   "profiler_MB": 35.974256,
+   "peak_MiB": 168.580078125,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1578246,
+   "saved_MiB": null,
+   "position_in_process": 2
+  },
+  {
+   "arm": "T4",
+   "bs": 8,
+   "profiler_MB": 34.578896,
+   "peak_MiB": 105.1845703125,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1113126,
+   "saved_MiB": null,
+   "position_in_process": 3
+  },
+  {
+   "arm": "head",
+   "bs": 8,
+   "profiler_MB": 31.635344,
+   "peak_MiB": 67.4169921875,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 131942,
+   "saved_MiB": null,
+   "position_in_process": 4
+  },
+  {
+   "arm": "last",
+   "bs": 8,
+   "profiler_MB": 31.631504,
+   "peak_MiB": 67.4072265625,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 130662,
+   "saved_MiB": null,
+   "position_in_process": 5
+  },
+  {
+   "arm": "LB",
+   "bs": 8,
+   "profiler_MB": 37.126448,
+   "peak_MiB": 557.16552734375,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1962310,
+   "saved_MiB": null,
+   "position_in_process": 6
+  },
+  {
+   "arm": "LB",
+   "bs": 1,
+   "profiler_MB": 13.945136,
+   "peak_MiB": 122.099609375,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1962310,
+   "saved_MiB": null,
+   "position_in_process": 7
+  },
+  {
+   "arm": "T3",
+   "bs": 1,
+   "profiler_MB": 12.792944,
+   "peak_MiB": 67.22607421875,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1578246,
+   "saved_MiB": null,
+   "position_in_process": 8
+  },
+  {
+   "arm": "T4",
+   "bs": 1,
+   "profiler_MB": 11.397584,
+   "peak_MiB": 52.091796875,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1113126,
+   "saved_MiB": null,
+   "position_in_process": 9
+  },
+  {
+   "arm": "head",
+   "bs": 1,
+   "profiler_MB": 8.454032,
+   "peak_MiB": 25.8798828125,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 131942,
+   "saved_MiB": null,
+   "position_in_process": 10
+  },
+  {
+   "arm": "last",
+   "bs": 1,
+   "profiler_MB": 8.450192,
+   "peak_MiB": 25.8701171875,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 130662,
+   "saved_MiB": null,
+   "position_in_process": 11
+  },
+  {
+   "arm": "LB",
+   "bs": 1,
+   "profiler_MB": 13.945136,
+   "peak_MiB": 122.099609375,
+   "peak_spread": 0.0,
+   "weights_MiB": 18.93701171875,
+   "trainable": 1962310,
+   "saved_MiB": null,
+   "position_in_process": 12
+  }
+ ]
+}

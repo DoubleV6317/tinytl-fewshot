@@ -1,0 +1,43 @@
+Flowers, paired SD 1.8
+    T3       (n=10, prior -1.0): inconcl 0.24, inferior 0.00, retains 0.26, retains-unadj 0.16, unres 0.34
+    T4       (n=10, prior -1.9): inconcl 0.09, inferior 0.03, retains 0.03, retains-unadj 0.01, unres 0.84
+    FT-Last  (n=10, prior -0.7): inconcl 0.21, inferior 0.00, retains 0.40, retains-unadj 0.20, unres 0.19
+    T2       (n=5, prior -0.8): inconcl 0.59, inferior 0.00, retains 0.27, unres 0.14
+Flowers, paired SD 2.5
+    T3       (n=10, prior -1.0): inconcl 0.50, inferior 0.00, retains 0.14, retains-unadj 0.12, unres 0.24
+    T4       (n=10, prior -1.9): inconcl 0.32, inferior 0.03, retains 0.03, retains-unadj 0.02, unres 0.61
+    FT-Last  (n=10, prior -0.7): inconcl 0.47, inferior 0.00, retains 0.21, retains-unadj 0.17, unres 0.15
+    T2       (n=5, prior -0.8): inconcl 0.73, inferior 0.00, retains 0.17, unres 0.10
+Aircraft, paired SD 2.5
+    T3       (n=6, prior -3.1): inconcl 0.24, inferior 0.18, retains 0.00, retains-unadj 0.00, unres 0.58
+    T4       (n=6, prior -10.6): inferior 1.00
+    FT-Last  (n=5, prior -17.6): inferior 1.00
+    T2       (n=6, prior -2.6): inconcl 0.37, inferior 0.09, retains 0.01, unres 0.52
+Aircraft, paired SD 3.5
+    T3       (n=6, prior -3.1): inconcl 0.49, inferior 0.12, retains 0.00, retains-unadj 0.00, unres 0.38
+    T4       (n=6, prior -10.6): inferior 1.00, unres 0.00
+    FT-Last  (n=5, prior -17.6): inferior 1.00
+    T2       (n=6, prior -2.6): inconcl 0.60, inferior 0.07, retains 0.02, unres 0.31
+H2 (LB-b1 - LB-b8), n=5
+  sd 2.5 d  +0: inconcl 0.62, moderate 0.00, noDeg 0.35, unres 0.03
+  sd 2.5 d  -1: inconcl 0.73, moderate 0.01, noDeg 0.14, unres 0.13
+  sd 2.5 d  -3: catastr 0.00, inconcl 0.37, moderate 0.14, noDeg 0.01, unres 0.48
+  sd 2.5 d  -6: catastr 0.14, inconcl 0.01, moderate 0.70, unres 0.15
+  sd 2.5 d -10: catastr 0.95, moderate 0.05, unres 0.00
+  sd 3.5 d  +0: inconcl 0.75, moderate 0.00, noDeg 0.22, unres 0.03
+  sd 3.5 d  -1: catastr 0.00, inconcl 0.80, moderate 0.01, noDeg 0.10, unres 0.09
+  sd 3.5 d  -3: catastr 0.00, inconcl 0.60, moderate 0.10, noDeg 0.01, unres 0.29
+  sd 3.5 d  -6: catastr 0.10, inconcl 0.12, moderate 0.48, noDeg 0.00, unres 0.30
+  sd 3.5 d -10: catastr 0.75, inconcl 0.00, moderate 0.23, unres 0.02
+H2b (LB-b1 - T4-b8 on Aircraft), n=5
+  sd 2.5 e +10.6: batch better 1.00, depth better 0.00
+  sd 2.5 e  +5.0: batch better 0.95, depth better 0.00
+  sd 2.5 e  +2.0: batch better 0.35, depth better 0.00
+  sd 2.5 e  +0.0: batch better 0.04, depth better 0.03
+  sd 3.5 e +10.6: batch better 1.00, depth better 0.00
+  sd 3.5 e  +5.0: batch better 0.75, depth better 0.00
+  sd 3.5 e  +2.0: batch better 0.22, depth better 0.00
+  sd 3.5 e  +0.0: batch better 0.03, depth better 0.03
+type-I of a single NI claim at d=-2, n=10, sd 2.5: 0.035
+type-I of a single NI claim at d=-2, n=6, sd 2.5: 0.036
+type-I of a single NI claim at d=-2, n=5, sd 2.5: 0.035

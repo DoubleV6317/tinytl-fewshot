@@ -1,0 +1,51 @@
+{
+  "dataset": "flowers102",
+  "lr": {
+    "LB": 0.0008,
+    "T3": 0.0008,
+    "last": 0.0008,
+    "T4": 0.0008,
+    "T2": 0.0008
+  },
+  "pilot": {
+    "LB": {
+      "mean_final_val": {
+        "0.0002": 84.558,
+        "0.0008": 85.784,
+        "0.0032": 79.069
+      },
+      "raw_best": 0.0008,
+      "chosen": 0.0008,
+      "raw_best_at_grid_edge": false,
+      "chosen_at_grid_edge": false,
+      "half_budget_gain_pp": 1.446
+    },
+    "T3": {
+      "mean_final_val": {
+        "0.0002": 84.51,
+        "0.0008": 86.716,
+        "0.0032": 86.177
+      },
+      "raw_best": 0.0008,
+      "chosen": 0.0008,
+      "raw_best_at_grid_edge": false,
+      "chosen_at_grid_edge": false,
+      "half_budget_gain_pp": 1.495
+    },
+    "last": {
+      "mean_final_val": {
+        "0.0002": 79.46,
+        "0.0008": 81.422,
+        "0.0032": 78.334
+      },
+      "raw_best": 0.0008,
+      "chosen": 0.0008,
+      "raw_best_at_grid_edge": false,
+      "chosen_at_grid_edge": false,
+      "half_budget_gain_pp": 1.152
+    }
+  },
+  "half_budget_flagged": [],
+  "drop_lr": null,
+  "rule": "mean final-epoch val over seeds [100, 101] (a diverged LR scores -inf); a non-upstream LR must beat 0.0002 by >= 1 pp; T4 and T2 take T3's LR"
+}

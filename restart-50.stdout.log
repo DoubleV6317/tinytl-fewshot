@@ -1,0 +1,427 @@
+Output: C:\Users\zhita\Documents\Codex\2026-09-10\this-class-will-feature-a-quarter\outputs\TinyTL\runs\train-tinytl-lite_residual+bias-seed0-20260910-184633
+Namespace(path='C:\\Users\\zhita\\Documents\\Codex\\2026-09-10\\this-class-will-feature-a-quarter\\outputs\\TinyTL\\runs\\train-tinytl-lite_residual+bias-seed0-20260910-184633', gpu='0', resume=False, manual_seed=0, dataset='flowers102', train_batch_size=8, test_batch_size=64, valid_size=None, n_worker=0, resize_scale=0.22, distort_color='None', image_size=224, n_epochs=50, init_lr=0.0002, lr_schedule_type='cosine', opt_type='adam', momentum=0.9, no_nesterov=False, weight_decay=0, no_decay_keys='bn#bias', label_smoothing=0.7, net='proxyless_mobile', dropout=0.2, ws_eps=1e-05, net_path=None, transfer_learning_method='tinytl-lite_residual+bias', lite_residual_downsample=2, lite_residual_expand=1, lite_residual_groups=2, lite_residual_ks=5, random_init_lite_residual=False, frozen_param_bits=8)
+Run config:
+	n_epochs: 50
+	init_lr: 0.0002
+	lr_schedule_type: cosine
+	lr_schedule_param: None
+	dataset: flowers102
+	train_batch_size: 8
+	test_batch_size: 64
+	valid_size: None
+	opt_type: adam
+	opt_param: {'momentum': 0.9, 'nesterov': True}
+	weight_decay: 0
+	label_smoothing: 0.7
+	no_decay_keys: bn#bias
+	mixup_alpha: None
+	model_init: he_fout
+	validation_frequency: 1
+	print_frequency: 10
+	n_worker: 0
+	resize_scale: 0.22
+	distort_color: None
+	image_size: 224
+	fast_evaluation: False
+Color jitter: None, resize_scale: 0.22, img_size: 224
+ProxylessNASNets(
+  (first_conv): ConvLayer(
+    (conv): MyConv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False, ws_eps=1e-05)
+    (bn): GroupNorm(4, 32, eps=0.001, affine=True)
+    (act): ReLU6(inplace=True)
+  )
+  (blocks): ModuleList(
+    (0): ResidualBlock(
+      (conv): MBConvLayer(
+        (depth_conv): Sequential(
+          (conv): MyConv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=32, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(4, 32, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(32, 16, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(2, 16, eps=0.001, affine=True)
+        )
+      )
+    )
+    (1): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(16, 48, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(6, 48, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(48, 48, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=48, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(6, 48, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(48, 32, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(4, 32, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(16, 16, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(2, 16, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(16, 32, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(4, 32, eps=0.001, affine=True)
+      )}
+    )
+    (2): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(32, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(96, 96, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=96, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(96, 32, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(4, 32, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(32, 32, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(4, 32, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(4, 32, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (3-4): 2 x ResidualBlock(
+      (conv): ZeroLayer()
+      (shortcut): IdentityLayer()
+    )
+    (5): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(32, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(96, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), groups=96, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(96, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(5, 40, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(32, 32, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(4, 32, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(32, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(5, 40, eps=0.001, affine=True)
+      )}
+    )
+    (6): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(40, 120, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(15, 120, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(120, 120, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=120, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(15, 120, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(120, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(5, 40, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(40, 40, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(5, 40, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(40, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(5, 40, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (7-8): 2 x ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(40, 120, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(15, 120, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(120, 120, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=120, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(15, 120, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(120, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(5, 40, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(40, 40, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(5, 40, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(40, 40, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(5, 40, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (9): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(40, 240, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(30, 240, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(240, 240, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), groups=240, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(30, 240, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(240, 80, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(10, 80, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(40, 40, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(5, 40, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(40, 80, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(10, 80, eps=0.001, affine=True)
+      )}
+    )
+    (10-12): 3 x ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(80, 240, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(30, 240, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(240, 240, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=240, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(30, 240, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(240, 80, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(10, 80, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(80, 80, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(10, 80, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(80, 80, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(10, 80, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (13): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(80, 480, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(60, 480, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(480, 480, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=480, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(60, 480, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(480, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(80, 80, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(10, 80, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(80, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(12, 96, eps=0.001, affine=True)
+      )}
+    )
+    (14-16): 3 x ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(96, 288, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(36, 288, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(288, 288, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=288, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(36, 288, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(288, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(12, 96, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(96, 96, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(12, 96, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(96, 96, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(12, 96, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (17): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(96, 576, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(72, 576, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(576, 576, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), groups=576, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(72, 576, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(576, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(24, 192, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(96, 96, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(12, 96, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(96, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(24, 192, eps=0.001, affine=True)
+      )}
+    )
+    (18): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(192, 1152, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(144, 1152, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(1152, 1152, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=1152, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(144, 1152, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(1152, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(24, 192, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(24, 192, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(192, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(24, 192, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (19-20): 2 x ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(192, 576, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(72, 576, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(576, 576, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=576, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(72, 576, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(576, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(24, 192, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(24, 192, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(192, 192, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(24, 192, eps=0.001, affine=True)
+      )}
+      (shortcut): IdentityLayer()
+    )
+    (21): ResidualBlock(
+      (conv): {
+       (main branch): MBConvLayer(
+        (inverted_bottleneck): Sequential(
+          (conv): MyConv2d(192, 1152, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(144, 1152, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (depth_conv): Sequential(
+          (conv): MyConv2d(1152, 1152, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3), groups=1152, bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(144, 1152, eps=0.001, affine=True)
+          (act): ReLU6(inplace=True)
+        )
+        (point_linear): Sequential(
+          (conv): MyConv2d(1152, 320, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+          (bn): GroupNorm(40, 320, eps=0.001, affine=True)
+        )
+      ), 
+       (lite residual): Sequential(
+        (pooling): AvgPool2d(kernel_size=2, stride=2, padding=0)
+        (conv1): MyConv2d(192, 192, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=2, bias=False, ws_eps=1e-05)
+        (bn1): GroupNorm(24, 192, eps=0.001, affine=True)
+        (act): ReLU(inplace=True)
+        (conv2): MyConv2d(192, 320, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+        (final_bn): GroupNorm(40, 320, eps=0.001, affine=True)
+      )}
+    )
+  )
+  (feature_mix_layer): ConvLayer(
+    (conv): MyConv2d(320, 1280, kernel_size=(1, 1), stride=(1, 1), bias=False, ws_eps=1e-05)
+    (bn): GroupNorm(160, 1280, eps=0.001, affine=True)
+    (act): ReLU6(inplace=True)
+  )
+  (global_avg_pool): MyGlobalAvgPool2d(keep_dim=False)
+  (classifier): LinearLayer(
+    (dropout): Dropout(p=0.2, inplace=True)
+    (linear): Linear(in_features=1280, out_features=102, bias=True)
+  )
+)
+Total training params: 1.96M
+Total FLOPs: 394.57M
+Total: 10633520 	Trainable: 7849240 (data bits 32) 	Frozen: 2784280 (data bits 8)
+Group 1: 39 params with wd 0.000000
+Group 2: 119 params with wd 0.000000
+Run configs dump to C:\Users\zhita\Documents\Codex\2026-09-10\this-class-will-feature-a-quarter\outputs\TinyTL\runs\train-tinytl-lite_residual+bias-seed0-20260910-184633\run.config
+Network configs dump to C:\Users\zhita\Documents\Codex\2026-09-10\this-class-will-feature-a-quarter\outputs\TinyTL\runs\train-tinytl-lite_residual+bias-seed0-20260910-184633\net.config

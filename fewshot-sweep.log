@@ -1,0 +1,28 @@
+[05:04:03] start fewshot-k5-r2-seed0
+RESULT {"k": 5, "seed": 0, "tag": "r2", "ratios": [2, 2, 2, 2, 2, 2], "epochs": 50, "best_val_top1": 87.451, "best_epoch": 28, "final_val_top1": 87.255, "test_top1": 83.54203935599284, "test_top5": 94.48690844039682, "test_loss": 2.39929768511446, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 686.13818359375, "train_seconds": 536.0399355888367, "n_train_images": 510}
+[05:14:10] done fewshot-k5-r2-seed0
+[05:14:10] start fewshot-k5-r1-seed0
+RESULT {"k": 5, "seed": 0, "tag": "r1", "ratios": [1, 1, 1, 1, 1, 1], "epochs": 50, "best_val_top1": 86.961, "best_epoch": 32, "final_val_top1": 85.98, "test_top1": 84.38770531793787, "test_top5": 94.763376158725, "test_loss": 2.3878408048303754, "profiler_memory_MB": 85.339312, "profiler_act_MB": 9.338224, "measured_peak_MiB": 734.85205078125, "train_seconds": 539.0728182792664, "n_train_images": 510}
+[05:24:23] done fewshot-k5-r1-seed0
+[05:24:23] start fewshot-k5-r4-seed0
+RESULT {"k": 5, "seed": 0, "tag": "r4", "ratios": [4, 4, 4, 4, 4, 4], "epochs": 50, "best_val_top1": 80.0, "best_epoch": 39, "final_val_top1": 79.51, "test_top1": 76.02862254025045, "test_top5": 91.28313546918199, "test_loss": 2.4940929044880775, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 674.0341796875, "train_seconds": 599.7732067108154, "n_train_images": 510}
+[05:36:03] done fewshot-k5-r4-seed0
+[05:36:03] start fewshot-k5-r2-seed1
+RESULT {"k": 5, "seed": 1, "tag": "r2", "ratios": [2, 2, 2, 2, 2, 2], "epochs": 50, "best_val_top1": 87.059, "best_epoch": 47, "final_val_top1": 86.961, "test_top1": 83.70466742559766, "test_top5": 94.25922914295008, "test_loss": 2.4233740817087224, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 686.13818359375, "train_seconds": 703.2524690628052, "n_train_images": 510}
+[05:49:33] done fewshot-k5-r2-seed1
+[05:49:33] start fewshot-k5-r1-seed1
+RESULT {"k": 5, "seed": 1, "tag": "r1", "ratios": [1, 1, 1, 1, 1, 1], "epochs": 50, "best_val_top1": 86.667, "best_epoch": 38, "final_val_top1": 86.176, "test_top1": 83.3143600585461, "test_top5": 94.47064563343633, "test_loss": 2.432469779135716, "profiler_memory_MB": 85.339312, "profiler_act_MB": 9.338224, "measured_peak_MiB": 734.85205078125, "train_seconds": 583.9173209667206, "n_train_images": 510}
+[06:00:35] done fewshot-k5-r1-seed1
+[06:00:35] start fewshot-k5-r4-seed1
+RESULT {"k": 5, "seed": 1, "tag": "r4", "ratios": [4, 4, 4, 4, 4, 4], "epochs": 50, "best_val_top1": 78.529, "best_epoch": 32, "final_val_top1": 78.529, "test_top1": 74.63002114164905, "test_top5": 89.8682712636201, "test_loss": 2.520667492771443, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 674.0341796875, "train_seconds": 567.8363554477692, "n_train_images": 510}
+[06:11:19] done fewshot-k5-r4-seed1
+[06:11:19] start fewshot-k5-r2-seed2
+RESULT {"k": 5, "seed": 2, "tag": "r2", "ratios": [2, 2, 2, 2, 2, 2], "epochs": 50, "best_val_top1": 86.373, "best_epoch": 29, "final_val_top1": 85.686, "test_top1": 81.72060497641893, "test_top5": 93.49487721580745, "test_loss": 2.4542519980706827, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 686.13818359375, "train_seconds": 567.7890908718109, "n_train_images": 510}
+[06:22:03] done fewshot-k5-r2-seed2
+[06:22:03] start fewshot-k5-r1-seed2
+RESULT {"k": 5, "seed": 2, "tag": "r1", "ratios": [1, 1, 1, 1, 1, 1], "epochs": 50, "best_val_top1": 86.373, "best_epoch": 30, "final_val_top1": 85.686, "test_top1": 84.92437794763376, "test_top5": 95.25126036753943, "test_loss": 2.3964117531040507, "profiler_memory_MB": 85.339312, "profiler_act_MB": 9.338224, "measured_peak_MiB": 734.85205078125, "train_seconds": 572.8070306777954, "n_train_images": 510}
+[06:32:52] done fewshot-k5-r1-seed2
+[06:32:52] start fewshot-k5-r4-seed2
+RESULT {"k": 5, "seed": 2, "tag": "r4", "ratios": [4, 4, 4, 4, 4, 4], "epochs": 50, "best_val_top1": 79.02, "best_epoch": 25, "final_val_top1": 78.039, "test_top1": 74.53244429988617, "test_top5": 90.73020003252562, "test_loss": 2.5085252864047907, "profiler_memory_MB": 37.126448, "profiler_act_MB": 3.311616, "measured_peak_MiB": 674.0341796875, "train_seconds": 574.5952320098877, "n_train_images": 510}
+[06:43:49] done fewshot-k5-r4-seed2
+[06:43:49] ALL DONE

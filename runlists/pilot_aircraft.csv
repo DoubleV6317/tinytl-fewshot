@@ -1,0 +1,10 @@
+block,dataset,k,arm,batch,lr,seed,epochs,val_every,tag,name
+P,aircraft,5,LB,8,0.0004,100,50,5,,depth-aircraft-k5-LB-b8-lr4e-4-s100
+P,aircraft,5,LB,8,0.0016,100,50,5,,depth-aircraft-k5-LB-b8-lr1.6e-3-s100
+P,aircraft,5,LB,8,0.0064,100,50,5,,depth-aircraft-k5-LB-b8-lr6.4e-3-s100
+P,aircraft,5,T3,8,0.0004,100,50,5,,depth-aircraft-k5-T3-b8-lr4e-4-s100
+P,aircraft,5,T3,8,0.0016,100,50,5,,depth-aircraft-k5-T3-b8-lr1.6e-3-s100
+P,aircraft,5,T3,8,0.0064,100,50,5,,depth-aircraft-k5-T3-b8-lr6.4e-3-s100
+P,aircraft,5,last,8,0.0004,100,50,5,,depth-aircraft-k5-last-b8-lr4e-4-s100
+P,aircraft,5,last,8,0.0016,100,50,5,,depth-aircraft-k5-last-b8-lr1.6e-3-s100
+P,aircraft,5,last,8,0.0064,100,50,5,,depth-aircraft-k5-last-b8-lr6.4e-3-s100
