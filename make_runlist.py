@@ -19,6 +19,10 @@ Supplementary experiments (实验设计/补充实验设计.md):
   python make_runlist.py smoke_supp   runlists/smoke_supp.csv: 1-epoch runs of the new code paths
   python make_runlist.py k10t3        runlists/k10t3_aircraft.csv: block K10-T3, T3 at k=10 on Aircraft (added
                                       after the K10 results; exploratory)
+  python make_runlist.py k10t2        runlists/k10t2_aircraft.csv: block K10-T2, T2 at k=10 on Aircraft (added
+                                      after the K10-T3 results; exploratory)
+  python make_runlist.py imprint_extra runlists/imprint_extra.csv: blocks I-LB (LB imprinted, k=2 and 5) and I-K10
+                                      (T4 imprinted, k=10), both datasets (added after the I results; exploratory)
 """
 import argparse
 import csv
@@ -242,7 +246,7 @@ def supp_rows():
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('what', choices=['smoke', 'pilot', 'freeze', 'main', 'batch1', 'lrcheck',
-                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3'])
+                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3', 'k10t2', 'imprint_extra'])
     p.add_argument('--dataset', default='flowers102', choices=sorted(CONFIG))
     p.add_argument('--drop_lr', type=float, default=None)
     p.add_argument('--n_seeds', type=int, default=None)
@@ -258,6 +262,17 @@ if __name__ == '__main__':
         lr = supp_lr('aircraft')
         write(LISTS / 'k10t3_aircraft.csv',
               [row('K10T3', 'aircraft', 'T3', lr['T3'], s, k=10) for s in range(SUPP_SEEDS)])
+    elif a.what == 'k10t2':
+        lr = supp_lr('aircraft')
+        write(LISTS / 'k10t2_aircraft.csv',
+              [row('K10T2', 'aircraft', 'T2', lr['T2'], s, k=10) for s in range(SUPP_SEEDS)])
+    elif a.what == 'imprint_extra':
+        lrs = {ds: supp_lr(ds) for ds in CONFIG}
+        seeds = range(SUPP_SEEDS)
+        write(LISTS / 'imprint_extra.csv',
+              [row('I-LB', ds, 'LB', lrs[ds]['LB'], s, k=k, head_init='imprint')
+               for ds in CONFIG for k in (2, 5) for s in seeds] +
+              [row('I-K10', ds, 'T4', lrs[ds]['T4'], s, k=10, head_init='imprint') for ds in CONFIG for s in seeds])
     elif a.what == 'smoke_supp':
         write(LISTS / 'smoke_supp.csv', [
             row('smoke', 'flowers102', 'LB', 8e-4, 0, k=10, epochs=1, val_every=1, tag='smoke4'),

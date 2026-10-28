@@ -126,11 +126,14 @@ k trend for flowers102 (descriptive):
   last val 65.10 -> 66.37 (+1.28 pp) | test 63.44 -> 63.95 (steps 1300 -> 3250)
   -> single-seed indication that k=2 is limited by the 50-epoch budget (step-matched val gain: LB +1.4 pp, T4 +2.5 pp, last +1.3 pp); k=2 results are labelled "at the 50-epoch budget"
 
-=== Q2: flowers102 imprinted vs random head (block I: 50 epochs; e = imprint - random, paired) ===
+=== Q2: flowers102 imprinted vs random head (blocks I, I-LB, I-K10: 50 epochs; e = imprint - random, paired) ===
+  k=2 LB   0 pairs so far
   k=2 T4   n=5 d=+1.46 sd=0.77 93% CI [+0.62, +2.30]  imprint helps    | val@5 +3.22 val@10 +0.61 | before training: val 58.6% (random head 0.8%), head row norm 0.393 (random 0.577), tau 104, LOO top-1 23.8% | R with imprint 150.1% [127.8, 200.7]
   k=2 last n=5 d=+1.34 sd=0.30 93% CI [+1.01, +1.67]  imprint helps    | val@5 +3.00 val@10 +1.63 | before training: val 58.6% (random head 0.8%), head row norm 0.393 (random 0.577), tau 104, LOO top-1 23.8% | R with imprint 29.4% [23.8, 38.6]
+  k=5 LB   0 pairs so far
   k=5 T4   n=5 d=+0.76 sd=0.43 93% CI [+0.29, +1.24]  imprint helps    | val@5 +0.74 val@10 +0.57 | before training: val 73.1% (random head 0.8%), head row norm 0.45 (random 0.577), tau 85.1, LOO top-1 68.1% | R with imprint 109.4% [102.6, 115.4]
   k=5 last n=5 d=+0.40 sd=0.09 93% CI [+0.31, +0.50]  imprint helps    | val@5 +2.33 val@10 +1.06 | before training: val 73.1% (random head 0.8%), head row norm 0.45 (random 0.577), tau 85.1, LOO top-1 68.1% | R with imprint 6.6% [5.6, 7.7]
+  k=10 T4   0 pairs so far
 
 === Q2: flowers102 short budget (block I10: T4, k=5, 10 epochs) ===
   e10 = T4-imprint-10 - T4-random-10: n=5 d=+1.97 sd=0.40 93% CI [+1.54, +2.41]  imprint helps
@@ -216,26 +219,30 @@ cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasib
   <= 128 MiB  arms T4/last, n=5: per-seed oracle 25.53 | best fixed arm T4 25.53 | deepest-that-fits T4 25.53 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
   <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 26.01 | best fixed arm T2 25.76 | deepest-that-fits T2 25.76 | headroom over best fixed 0.25 pp, over deepest 0.25 pp | per-seed winners T2:2 T3:2 T4:1
 
---- aircraft k=10: 20 runs found (arms LB/T3/T4/last, LRs {'LB': 0.0004, 'T3': 0.0004, 'T4': 0.0004, 'last': 0.0016}) ---
+--- aircraft k=10: 24 runs found (arms LB/T2/T3/T4/last, LRs {'LB': 0.0004, 'T2': 0.0004, 'T3': 0.0004, 'T4': 0.0004, 'last': 0.0016}) ---
 pairing ok | diverged: none | code versions: 1
   LB   n= 5 test  39.47 +- 0.63  val  38.64  train  98.1   557.2 MiB
+  T2   n= 4 test  38.34 +- 1.03  val  38.35  train  98.2   226.5 MiB
   T3   n= 5 test  37.92 +- 1.22  val  38.64  train  98.0   168.6 MiB
   T4   n= 5 test  36.12 +- 0.57  val  35.96  train  97.4   105.2 MiB
   last n= 5 test  29.20 +- 0.29  val  29.36  train  81.3    67.4 MiB
 paired d = arm - LB on test (pp), margin 2
+  T2   n=4 d=-1.37 sd=0.92 93% CI [-2.64, -0.10]  significant loss, size unresolved    NI p=0.1332 (exploratory)
   T3   n=5 d=-1.55 sd=0.94 93% CI [-2.58, -0.51]  significant loss, size unresolved    NI p=0.1717 (exploratory)
   T4   n=5 d=-3.35 sd=0.37 93% CI [-3.76, -2.95]  inferior by more than the margin     NI p=0.9994
   last n=5 d=-10.27 sd=0.77 93% CI [-11.12, -9.43]  inferior by more than the margin     NI p=1.0000
   Holm T4   p=0.9994 vs 0.0175 -> retains not confirmed after Holm
   Holm last p=1.0000 vs 0.0350 -> retains not confirmed after Holm
 shallowest cutoff that retains after Holm: none
-half-budget gain (val {45,50} - {20,25}, descriptive): LB 1.48 T3 1.86 T4 1.72 last 3.64
-training compute (fwd+bwd MACs x images x epochs, excluding val/test): LB 42.7 T (1.00x LB) | T3 31.1 T (0.73x LB) | T4 26.0 T (0.61x LB) | last 19.7 T (0.46x LB)
+half-budget gain (val {45,50} - {20,25}, descriptive): LB 1.48 T2 1.14 T3 1.86 T4 1.72 last 3.64
+training compute (fwd+bwd MACs x images x epochs, excluding val/test): LB 42.7 T (1.00x LB) | T2 34.6 T (0.81x LB) | T3 31.1 T (0.73x LB) | T4 26.0 T (0.61x LB) | last 19.7 T (0.46x LB)
 retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
+  T2    n= 4 R  86.9% [ 79.9,  92.9]  (LB - last on these seeds: 10.52 pp)
   T3    n= 5 R  84.9% [ 78.4,  92.6]  (LB - last on these seeds: 10.27 pp)
   T4    n= 5 R  67.3% [ 64.7,  70.0]  (LB - last on these seeds: 10.27 pp)
 train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
   LB    n= 5 gap  58.7 +- 0.8 pp
+  T2    n= 4 gap  59.9 +- 1.3 pp   vs LB +1.47 [+0.27, +2.68]
   T3    n= 5 gap  60.1 +- 1.4 pp   vs LB +1.41 [+0.51, +2.30]
   T4    n= 5 gap  61.2 +- 0.5 pp   vs LB +2.57 [+2.08, +3.07]
   last  n= 5 gap  52.1 +- 0.9 pp   vs LB -6.59 [-8.06, -5.12]
@@ -244,12 +251,12 @@ best configuration within a training-memory budget (measured PyTorch peak MiB; d
   <= 96 MiB  best last  ( 67.4 MiB) test 29.20, d -10.27 | tied: none | TinyTL fits as: nothing
   <= 128 MiB best T4    (105.2 MiB) test 36.12, d -3.35 | tied: none | TinyTL fits as: nothing
   <= 192 MiB best T3    (168.6 MiB) test 37.92, d -1.55 | tied: none | TinyTL fits as: nothing
-  <= 256 MiB best T3    (168.6 MiB) test 37.92, d -1.55 | tied: none | TinyTL fits as: nothing
-  <= 512 MiB best T3    (168.6 MiB) test 37.92, d -1.55 | tied: none | TinyTL fits as: nothing
+  <= 256 MiB best T2    (226.5 MiB) test 38.34, d -1.37 | tied: T3 | TinyTL fits as: nothing
+  <= 512 MiB best T2    (226.5 MiB) test 38.34, d -1.37 | tied: T3 | TinyTL fits as: nothing
   no budget  best LB    (557.2 MiB) test 39.47, d +0.00 | tied: none | TinyTL fits as: LB (d +0.00)
 cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
   <= 128 MiB  arms T4/last, n=5: per-seed oracle 36.12 | best fixed arm T4 36.12 | deepest-that-fits T4 36.12 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
-  <= 256 MiB  arms T3/T4/last, n=5: per-seed oracle 37.92 | best fixed arm T3 37.92 | deepest-that-fits T3 37.92 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T3:5
+  <= 256 MiB  arms T2/T3/T4/last, n=4: per-seed oracle 38.43 | best fixed arm T2 38.34 | deepest-that-fits T2 38.34 | headroom over best fixed 0.09 pp, over deepest 0.09 pp | per-seed winners T2:3 T3:1
 
 k trend for aircraft (descriptive):
   k   LB test        d_T4 [93% CI]          d_last [93% CI]        R_T4 [93% CI]       retains after Holm
@@ -263,11 +270,14 @@ k trend for aircraft (descriptive):
   last val 15.00 -> 15.60 (+0.60 pp) | test 13.92 -> 14.13 (steps 1250 -> 3125)
   -> single-seed indication that k=2 is limited by the 50-epoch budget (step-matched val gain: T4 +1.5 pp); k=2 results are labelled "at the 50-epoch budget"
 
-=== Q2: aircraft imprinted vs random head (block I: 50 epochs; e = imprint - random, paired) ===
+=== Q2: aircraft imprinted vs random head (blocks I, I-LB, I-K10: 50 epochs; e = imprint - random, paired) ===
+  k=2 LB   0 pairs so far
   k=2 T4   n=5 d=+1.12 sd=0.59 93% CI [+0.46, +1.77]  imprint helps    | val@5 +3.70 val@10 +1.34 | before training: val 11.0% (random head 0.8%), head row norm 0.461 (random 0.577), tau 74.8, LOO top-1 3.9% | R with imprint -885.2% [-2009.1, 3600.0]
   k=2 last n=5 d=+0.07 sd=0.34 93% CI [-0.30, +0.43]  within +-1 pp    | val@5 +1.10 val@10 +0.58 | before training: val 11.1% (random head 0.8%), head row norm 0.461 (random 0.577), tau 74.8, LOO top-1 3.9% | R with imprint -40.7% [-218.2, 277.8]
+  k=5 LB   0 pairs so far
   k=5 T4   n=5 d=+0.56 sd=0.45 93% CI [+0.07, +1.06]  imprint helps    | val@5 +3.74 val@10 +0.74 | before training: val 15.8% (random head 0.8%), head row norm 0.497 (random 0.577), tau 65.8, LOO top-1 13.2% | R with imprint 101.7% [85.5, 121.2]
   k=5 last n=5 d=+0.10 sd=0.24 93% CI [-0.16, +0.36]  within +-1 pp    | val@5 +0.84 val@10 +0.78 | before training: val 15.8% (random head 0.8%), head row norm 0.497 (random 0.577), tau 65.8, LOO top-1 13.1% | R with imprint 2.6% [-2.4, 6.5]
+  k=10 T4   0 pairs so far
 
 === Q2: aircraft short budget (block I10: T4, k=5, 10 epochs) ===
   e10 = T4-imprint-10 - T4-random-10: n=5 d=+2.94 sd=0.66 93% CI [+2.22, +3.66]  imprint helps

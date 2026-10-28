@@ -3,14 +3,15 @@ supplementary run. CPU only.
 
   python analyze_supp.py
 
-Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp, k10t3_aircraft).
+Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp, k10t3_aircraft,
+k10t2_aircraft, imprint_extra).
 Sections:
   Q3  Aircraft LR below the grid (block X); if an LR changed, the k=5 Aircraft block in Q1 uses the new LRs and is
       the sensitivity analysis of H1-A (block X-R)
   Q1  per dataset and k in {2, 5, 10}: d vs LB with labels and a per-k Holm family, R, train-test gap, budget table,
       headroom, training compute; then the k trend
   Q4  k=2 step-matched control (block S)
-  Q2  imprinted vs random head at 50 epochs (block I) and at 10 epochs (block I10)
+  Q2  imprinted vs random head at 50 epochs (blocks I, I-LB, I-K10) and at 10 epochs (block I10)
 """
 import csv
 import json
@@ -20,17 +21,21 @@ from scipy import stats
 from analyze_depth import (MARGIN, HOLM_ALPHA, HEADROOM_NOTE, ci, label, fmt, mean, memory, paired, check_pairing,
                            boot_ratio, purpose_metrics)
 from depth_common import ROOT, run_name
-from make_runlist import (CONFIG, SUPP_LR_FILE, SUPP_SEEDS, K2_ARMS, K10_ARMS, STEP_ARMS, IMPRINT_ARMS, STEP_EPOCHS,
-                          STEP_VAL_EVERY, SHORT_EPOCHS)
+from make_runlist import (CONFIG, SUPP_LR_FILE, SUPP_SEEDS, K2_ARMS, STEP_ARMS, STEP_EPOCHS, STEP_VAL_EVERY,
+                          SHORT_EPOCHS)
 
 DATASETS = ['flowers102', 'aircraft']
 LISTS = ['main_flowers102.csv', 'main_aircraft.csv', 'pilot_aircraft.csv', 'lrx_aircraft.csv',
-         'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv']
-# T3 at k=10 is block K10-T3 (Aircraft only), added after the K10 results: exploratory, outside the Holm family.
-# An arm without runs (T3 on Flowers) drops out of the block.
-K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: ['LB', 'T3', 'T4', 'last']}
+         'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv', 'k10t2_aircraft.csv', 'imprint_extra.csv']
+# T3 and T2 at k=10 are blocks K10-T3 and K10-T2 (Aircraft only), added after the K10 and K10-T3 results:
+# exploratory, outside the Holm family. An arm without runs (T3, T2 on Flowers) drops out of the block.
+K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: ['LB', 'T2', 'T3', 'T4', 'last']}
 K_FAMILY = {2: ['T3', 'T4', 'last'], 5: ['T3', 'T4', 'last'], 10: ['T4', 'last']}
 K_HEADROOM = {2: (128, 256), 5: (128, 256), 10: (128, 256)}
+# Imprinted arms per k. LB at k=2 and 5 (block I-LB) and T4 at k=10 (block I-K10) were added after the I results:
+# exploratory, like the T4-imprint vs LB lines.
+IMPRINT_CELLS = {2: ['LB', 'T4', 'last'], 5: ['LB', 'T4', 'last'], 10: ['T4']}
+LATE_IMPRINT = {(2, 'LB'), (5, 'LB'), (10, 'T4')}
 EFFECT_MARGIN = 1.0  # pp, the "within +-1 pp" label for imprinting
 SEEDS = list(range(SUPP_SEEDS))  # seeds of the k=2, k=10, I and I10 blocks
 
@@ -233,16 +238,19 @@ def same_setup(a, b):
 
 
 def imprint_block(dataset, lr, blocks, macs):
-    print('\n=== Q2: %s imprinted vs random head (block I: 50 epochs; e = imprint - random, paired) ===' % dataset)
-    for k in (2, 5):
+    print('\n=== Q2: %s imprinted vs random head (blocks I, I-LB, I-K10: 50 epochs; e = imprint - random, paired) ==='
+          % dataset)
+    for k, arms in IMPRINT_CELLS.items():
         base = blocks.get((dataset, k))
-        for a in IMPRINT_ARMS:
+        imp_by_arm = {}
+        for a in arms:
             pairs = []
             for s in SEEDS:
                 imp, rnd = get(dataset, k, a, lr[a], s, head_init='imprint'), get(dataset, k, a, lr[a], s)
                 if imp is not None and rnd is not None:
                     assert same_setup(imp, rnd), '%s k=%d seed %d: imprint and random runs are not paired' % (a, k, s)
                     pairs.append((s, imp, rnd))
+            imp_by_arm[a] = {s: imp for s, imp, _ in pairs}
             if len(pairs) < 2:
                 print('  k=%d %-4s %d pairs so far' % (k, a, len(pairs)))
                 continue
@@ -265,7 +273,18 @@ def imprint_block(dataset, lr, blocks, macs):
                     den = [base['by'][('LB', s)]['test_top1'] - base['by'][('last', s)]['test_top1'] for s in ss]
                     lo, hi = boot_ratio(num, den)
                     line += ' | R with imprint %.1f%% [%.1f, %.1f]' % (100 * mean(num) / mean(den), 100 * lo, 100 * hi)
-            print(line)
+            print(line + (' (exploratory, added later)' if (k, a) in LATE_IMPRINT else ''))
+        # Does T4 still retain once imprinting is used: against LB with an imprinted head where it ran, else against LB
+        if 'LB' in arms:
+            ref, ref_name = imp_by_arm['LB'], 'LB-imprint'
+        else:
+            ref, ref_name = {s: r for (a, s), r in base['by'].items() if a == 'LB'} if base else {}, 'LB'
+        ss = [s for s in imp_by_arm.get('T4', {}) if s in ref]
+        if len(ss) >= 2:
+            # LB freezes (and so quantizes) different layers than T4, so only the subset and random head must match it
+            assert all(imp_by_arm['T4'][s][key] == ref[s][key] for s in ss for key in ('subset_sha1', 'head_init_sha1'))
+            c = ci([imp_by_arm['T4'][s]['test_top1'] - ref[s]['test_top1'] for s in ss])
+            print('  k=%d T4-imprint - %s: %s  %s (exploratory, no Holm)' % (k, ref_name, fmt(c), label(c['L'], c['U'])))
 
     print('\n=== Q2: %s short budget (block I10: T4, k=5, %d epochs) ===' % (dataset, SHORT_EPOCHS))
     rows = []

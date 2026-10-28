@@ -1,0 +1,6 @@
+block,dataset,k,arm,batch,lr,seed,epochs,val_every,tag,name,head_init
+K10T2,aircraft,10,T2,8,0.0004,0,50,5,,depth-aircraft-k10-T2-b8-lr4e-4-s0,random
+K10T2,aircraft,10,T2,8,0.0004,1,50,5,,depth-aircraft-k10-T2-b8-lr4e-4-s1,random
+K10T2,aircraft,10,T2,8,0.0004,2,50,5,,depth-aircraft-k10-T2-b8-lr4e-4-s2,random
+K10T2,aircraft,10,T2,8,0.0004,3,50,5,,depth-aircraft-k10-T2-b8-lr4e-4-s3,random
+K10T2,aircraft,10,T2,8,0.0004,4,50,5,,depth-aircraft-k10-T2-b8-lr4e-4-s4,random
