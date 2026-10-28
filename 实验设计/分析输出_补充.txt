@@ -127,13 +127,16 @@ k trend for flowers102 (descriptive):
   -> single-seed indication that k=2 is limited by the 50-epoch budget (step-matched val gain: LB +1.4 pp, T4 +2.5 pp, last +1.3 pp); k=2 results are labelled "at the 50-epoch budget"
 
 === Q2: flowers102 imprinted vs random head (blocks I, I-LB, I-K10: 50 epochs; e = imprint - random, paired) ===
-  k=2 LB   0 pairs so far
+  k=2 LB   n=5 d=+2.85 sd=0.73 93% CI [+2.05, +3.66]  imprint helps    | val@5 +6.98 val@10 +3.24 | before training: val 58.6% (random head 0.8%), head row norm 0.393 (random 0.577), tau 104, LOO top-1 23.9% (exploratory, added later)
   k=2 T4   n=5 d=+1.46 sd=0.77 93% CI [+0.62, +2.30]  imprint helps    | val@5 +3.22 val@10 +0.61 | before training: val 58.6% (random head 0.8%), head row norm 0.393 (random 0.577), tau 104, LOO top-1 23.8% | R with imprint 150.1% [127.8, 200.7]
   k=2 last n=5 d=+1.34 sd=0.30 93% CI [+1.01, +1.67]  imprint helps    | val@5 +3.00 val@10 +1.63 | before training: val 58.6% (random head 0.8%), head row norm 0.393 (random 0.577), tau 104, LOO top-1 23.8% | R with imprint 29.4% [23.8, 38.6]
-  k=5 LB   0 pairs so far
+  k=2 T4-imprint - LB-imprint: n=5 d=-0.58 sd=0.87 93% CI [-1.53, +0.38]  retains (exploratory, no Holm)
+  k=5 LB   n=5 d=+0.99 sd=0.40 93% CI [+0.56, +1.43]  imprint helps    | val@5 +3.00 val@10 +1.04 | before training: val 73.1% (random head 0.8%), head row norm 0.45 (random 0.577), tau 85.1, LOO top-1 68.0% (exploratory, added later)
   k=5 T4   n=5 d=+0.76 sd=0.43 93% CI [+0.29, +1.24]  imprint helps    | val@5 +0.74 val@10 +0.57 | before training: val 73.1% (random head 0.8%), head row norm 0.45 (random 0.577), tau 85.1, LOO top-1 68.1% | R with imprint 109.4% [102.6, 115.4]
   k=5 last n=5 d=+0.40 sd=0.09 93% CI [+0.31, +0.50]  imprint helps    | val@5 +2.33 val@10 +1.06 | before training: val 73.1% (random head 0.8%), head row norm 0.45 (random 0.577), tau 85.1, LOO top-1 68.1% | R with imprint 6.6% [5.6, 7.7]
-  k=10 T4   0 pairs so far
+  k=5 T4-imprint - LB-imprint: n=5 d=-0.42 sd=0.17 93% CI [-0.61, -0.23]  retains (exploratory, no Holm)
+  k=10 T4   n=5 d=-0.09 sd=0.20 93% CI [-0.31, +0.12]  within +-1 pp    | val@5 +0.24 val@10 -0.49 | before training: val 79.0% (random head 0.8%), head row norm 0.462 (random 0.577), tau 81.3, LOO top-1 79.2% | R with imprint 91.4% [87.4, 95.4] (exploratory, added later)
+  k=10 T4-imprint - LB: n=5 d=-0.50 sd=0.35 93% CI [-0.88, -0.12]  retains (exploratory, no Holm)
 
 === Q2: flowers102 short budget (block I10: T4, k=5, 10 epochs) ===
   e10 = T4-imprint-10 - T4-random-10: n=5 d=+1.97 sd=0.40 93% CI [+1.54, +2.41]  imprint helps
@@ -271,13 +274,16 @@ k trend for aircraft (descriptive):
   -> single-seed indication that k=2 is limited by the 50-epoch budget (step-matched val gain: T4 +1.5 pp); k=2 results are labelled "at the 50-epoch budget"
 
 === Q2: aircraft imprinted vs random head (blocks I, I-LB, I-K10: 50 epochs; e = imprint - random, paired) ===
-  k=2 LB   0 pairs so far
+  k=2 LB   n=5 d=+1.25 sd=1.02 93% CI [+0.13, +2.36]  imprint helps    | val@5 +5.12 val@10 +2.06 | before training: val 11.0% (random head 0.8%), head row norm 0.461 (random 0.577), tau 74.8, LOO top-1 3.9% (exploratory, added later)
   k=2 T4   n=5 d=+1.12 sd=0.59 93% CI [+0.46, +1.77]  imprint helps    | val@5 +3.70 val@10 +1.34 | before training: val 11.0% (random head 0.8%), head row norm 0.461 (random 0.577), tau 74.8, LOO top-1 3.9% | R with imprint -885.2% [-2009.1, 3600.0]
   k=2 last n=5 d=+0.07 sd=0.34 93% CI [-0.30, +0.43]  within +-1 pp    | val@5 +1.10 val@10 +0.58 | before training: val 11.1% (random head 0.8%), head row norm 0.461 (random 0.577), tau 74.8, LOO top-1 3.9% | R with imprint -40.7% [-218.2, 277.8]
-  k=5 LB   0 pairs so far
+  k=2 T4-imprint - LB-imprint: n=5 d=+0.35 sd=0.28 93% CI [+0.04, +0.66]  retains (exploratory, no Holm)
+  k=5 LB   n=5 d=+0.50 sd=0.52 93% CI [-0.07, +1.07]  inconclusive     | val@5 +5.00 val@10 +2.12 | before training: val 15.8% (random head 0.8%), head row norm 0.499 (random 0.577), tau 65.5, LOO top-1 13.1% (exploratory, added later)
   k=5 T4   n=5 d=+0.56 sd=0.45 93% CI [+0.07, +1.06]  imprint helps    | val@5 +3.74 val@10 +0.74 | before training: val 15.8% (random head 0.8%), head row norm 0.497 (random 0.577), tau 65.8, LOO top-1 13.2% | R with imprint 101.7% [85.5, 121.2]
   k=5 last n=5 d=+0.10 sd=0.24 93% CI [-0.16, +0.36]  within +-1 pp    | val@5 +0.84 val@10 +0.78 | before training: val 15.8% (random head 0.8%), head row norm 0.497 (random 0.577), tau 65.8, LOO top-1 13.1% | R with imprint 2.6% [-2.4, 6.5]
-  k=10 T4   0 pairs so far
+  k=5 T4-imprint - LB-imprint: n=5 d=-0.44 sd=0.65 93% CI [-1.16, +0.28]  retains (exploratory, no Holm)
+  k=10 T4   n=5 d=+0.32 sd=0.50 93% CI [-0.23, +0.86]  within +-1 pp    | val@5 +3.90 val@10 +1.42 | before training: val 18.8% (random head 0.8%), head row norm 0.469 (random 0.577), tau 68.3, LOO top-1 18.5% | R with imprint 70.4% [67.8, 72.9] (exploratory, added later)
+  k=10 T4-imprint - LB: n=5 d=-3.04 sd=0.31 93% CI [-3.37, -2.70]  inferior by more than the margin (exploratory, no Holm)
 
 === Q2: aircraft short budget (block I10: T4, k=5, 10 epochs) ===
   e10 = T4-imprint-10 - T4-random-10: n=5 d=+2.94 sd=0.66 93% CI [+2.22, +3.66]  imprint helps
