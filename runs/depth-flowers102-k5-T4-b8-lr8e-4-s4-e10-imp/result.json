@@ -1,0 +1,79 @@
+{
+  "name": "depth-flowers102-k5-T4-b8-lr8e-4-s4-e10-imp",
+  "dataset": "flowers102",
+  "k": 5,
+  "arm": "T4",
+  "batch": 8,
+  "lr": 0.0008,
+  "seed": 4,
+  "epochs": 10,
+  "val_every": 5,
+  "steps": 640,
+  "n_train_images": 510,
+  "tag": "",
+  "head_init": "imprint",
+  "imprint": {
+    "tau": 85.11380382023764,
+    "tau_at_grid_edge": false,
+    "support_loss": 4.153250894417198,
+    "support_top1": 98.23529411764706,
+    "loo_top1": 66.66666666666666,
+    "loo_tau": 17.378008287493753,
+    "loo_tau_at_grid_edge": false,
+    "val_top1_random_head": 0.6862745098039216,
+    "val_top1_imprinted_head": 72.6470588235294,
+    "row_norm_random": 0.5774203912206312,
+    "row_norm_imprinted": 0.4494350742208021
+  },
+  "imprint_sha1": "c26cc0a0e67c1528f41e0190331641a195c7d3ac",
+  "test_top1": 83.94860953000487,
+  "test_top5": 94.56822247519922,
+  "test_loss": 2.39937333167714,
+  "final_val_top1": 86.176,
+  "final_train_top1": 99.412,
+  "val_curve": [
+    [
+      5,
+      84.804,
+      98.824
+    ],
+    [
+      10,
+      86.176,
+      99.412
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      2.289,
+      3.93
+    ],
+    [
+      10,
+      2.32,
+      3.895
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 1113126,
+  "profiler_MB": 34.578896,
+  "profiler_act_MB": 3.311616,
+  "run_peak_incl_eval_MiB": 428.96533203125,
+  "quantized_layers": 89,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "95485ea8a812f0fa1b47a46af3845de7abd91ac7",
+  "head_init_sha1": "ceabe06ee132b70d0247b6f286898d4b819e0de0",
+  "frozen_sha1": "d42ec08e5b4db89e99b4004aed38d26061e7ab4b",
+  "code_sha1": "8303141c6d9a008a37d593ee70fae0e83f1abbb7",
+  "setup_seconds": 13.044231653213501,
+  "train_seconds": 48.877694845199585,
+  "test_seconds": 30.726892709732056,
+  "gpu_util_at_start": "11 %, 1427 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}

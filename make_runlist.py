@@ -17,6 +17,8 @@ Supplementary experiments (实验设计/补充实验设计.md):
                                       an LR changed
   python make_runlist.py supp         runlists/supp.csv: K2, S, I, K10, I10 for both datasets, in that order
   python make_runlist.py smoke_supp   runlists/smoke_supp.csv: 1-epoch runs of the new code paths
+  python make_runlist.py k10t3        runlists/k10t3_aircraft.csv: block K10-T3, T3 at k=10 on Aircraft (added
+                                      after the K10 results; exploratory)
 """
 import argparse
 import csv
@@ -240,7 +242,7 @@ def supp_rows():
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('what', choices=['smoke', 'pilot', 'freeze', 'main', 'batch1', 'lrcheck',
-                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp'])
+                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3'])
     p.add_argument('--dataset', default='flowers102', choices=sorted(CONFIG))
     p.add_argument('--drop_lr', type=float, default=None)
     p.add_argument('--n_seeds', type=int, default=None)
@@ -252,6 +254,10 @@ if __name__ == '__main__':
         lrx_freeze(a.force)
     elif a.what == 'supp':
         write(LISTS / 'supp.csv', supp_rows())
+    elif a.what == 'k10t3':
+        lr = supp_lr('aircraft')
+        write(LISTS / 'k10t3_aircraft.csv',
+              [row('K10T3', 'aircraft', 'T3', lr['T3'], s, k=10) for s in range(SUPP_SEEDS)])
     elif a.what == 'smoke_supp':
         write(LISTS / 'smoke_supp.csv', [
             row('smoke', 'flowers102', 'LB', 8e-4, 0, k=10, epochs=1, val_every=1, tag='smoke4'),

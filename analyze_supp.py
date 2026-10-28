@@ -3,7 +3,8 @@ supplementary run. CPU only.
 
   python analyze_supp.py
 
-Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp). Sections:
+Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp, k10t3_aircraft).
+Sections:
   Q3  Aircraft LR below the grid (block X); if an LR changed, the k=5 Aircraft block in Q1 uses the new LRs and is
       the sensitivity analysis of H1-A (block X-R)
   Q1  per dataset and k in {2, 5, 10}: d vs LB with labels and a per-k Holm family, R, train-test gap, budget table,
@@ -24,10 +25,12 @@ from make_runlist import (CONFIG, SUPP_LR_FILE, SUPP_SEEDS, K2_ARMS, K10_ARMS, S
 
 DATASETS = ['flowers102', 'aircraft']
 LISTS = ['main_flowers102.csv', 'main_aircraft.csv', 'pilot_aircraft.csv', 'lrx_aircraft.csv',
-         'lrrerun_aircraft.csv', 'supp.csv']
-K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: K10_ARMS}
+         'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv']
+# T3 at k=10 is block K10-T3 (Aircraft only), added after the K10 results: exploratory, outside the Holm family.
+# An arm without runs (T3 on Flowers) drops out of the block.
+K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: ['LB', 'T3', 'T4', 'last']}
 K_FAMILY = {2: ['T3', 'T4', 'last'], 5: ['T3', 'T4', 'last'], 10: ['T4', 'last']}
-K_HEADROOM = {2: (128, 256), 5: (128, 256), 10: (128,)}
+K_HEADROOM = {2: (128, 256), 5: (128, 256), 10: (128, 256)}
 EFFECT_MARGIN = 1.0  # pp, the "within +-1 pp" label for imprinting
 SEEDS = list(range(SUPP_SEEDS))  # seeds of the k=2, k=10, I and I10 blocks
 
@@ -118,11 +121,11 @@ def depth_block(dataset, k, lr, mem, macs):
             r = get(dataset, k, a, lr[a], s)
             if r is not None:
                 by[(a, s)] = r
+    arms = [a for a in arms if any((a, s) in by for s in seeds)] or arms
     print('\n--- %s k=%d: %d runs found (arms %s, LRs %s) ---' % (
         dataset, k, len(by), '/'.join(arms), {a: lr[a] for a in arms}))
     if not by:
         return None
-    arms = [a for a in arms if any((a, s) in by for s in seeds)]
     seeds = [s for s in seeds if any((a, s) in by for a in arms)]  # partial results: only seeds with a finished run
     check_pairing(by, arms, seeds)
     print('pairing ok | diverged: %s | code versions: %d' % (

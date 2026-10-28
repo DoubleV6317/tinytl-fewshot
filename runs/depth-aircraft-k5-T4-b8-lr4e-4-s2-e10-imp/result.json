@@ -1,0 +1,79 @@
+{
+  "name": "depth-aircraft-k5-T4-b8-lr4e-4-s2-e10-imp",
+  "dataset": "aircraft",
+  "k": 5,
+  "arm": "T4",
+  "batch": 8,
+  "lr": 0.0004,
+  "seed": 2,
+  "epochs": 10,
+  "val_every": 5,
+  "steps": 630,
+  "n_train_images": 500,
+  "tag": "",
+  "head_init": "imprint",
+  "imprint": {
+    "tau": 64.56542290346556,
+    "tau_at_grid_edge": false,
+    "support_loss": 4.417754722722009,
+    "support_top1": 77.8,
+    "loo_top1": 12.2,
+    "loo_tau": 26.302679918953817,
+    "loo_tau_at_grid_edge": false,
+    "val_top1_random_head": 1.2,
+    "val_top1_imprinted_head": 15.1,
+    "row_norm_random": 0.5765134124909806,
+    "row_norm_imprinted": 0.5058471981054812
+  },
+  "imprint_sha1": "31b34156e6d1a904fc3b4c954306d28ca90b5d82",
+  "test_top1": 23.162316231623162,
+  "test_top5": 48.154815481548155,
+  "test_loss": 3.716942354397412,
+  "final_val_top1": 23.8,
+  "final_train_top1": 89.4,
+  "val_curve": [
+    [
+      5,
+      22.9,
+      76.2
+    ],
+    [
+      10,
+      23.8,
+      89.4
+    ]
+  ],
+  "loss_curve": [
+    [
+      5,
+      3.75,
+      4.2
+    ],
+    [
+      10,
+      3.703,
+      4.102
+    ]
+  ],
+  "diverged": false,
+  "trainable_params": 1110564,
+  "profiler_MB": 34.568648,
+  "profiler_act_MB": 3.311616,
+  "run_peak_incl_eval_MiB": 428.92578125,
+  "quantized_layers": 89,
+  "quantized_layers_computed": 0,
+  "subset_sha1": "a6ef34f67f653fdac3a772a5fd8a3cc892faa712",
+  "head_init_sha1": "28f64f18966eae7dc3e1719a858236d38f087a9c",
+  "frozen_sha1": "d42ec08e5b4db89e99b4004aed38d26061e7ab4b",
+  "code_sha1": "8303141c6d9a008a37d593ee70fae0e83f1abbb7",
+  "setup_seconds": 14.218855142593384,
+  "train_seconds": 80.17512345314026,
+  "test_seconds": 19.431493043899536,
+  "gpu_util_at_start": "57 %, 1427 MiB",
+  "cudnn_benchmark": true,
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "torchvision": "0.20.1+cu124",
+    "sklearn": "1.5.2"
+  }
+}
