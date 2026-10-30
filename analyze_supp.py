@@ -4,12 +4,13 @@ supplementary run. CPU only.
   python analyze_supp.py
 
 Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp, k10t3_aircraft,
-k10t2_aircraft, imprint_extra).
+k10t2_aircraft, imprint_extra, k10b1_aircraft).
 Sections:
   Q3  Aircraft LR below the grid (block X); if an LR changed, the k=5 Aircraft block in Q1 uses the new LRs and is
       the sensitivity analysis of H1-A (block X-R)
   Q1  per dataset and k in {2, 5, 10}: d vs LB with labels and a per-k Holm family, R, train-test gap, budget table,
-      headroom, training compute; then the k trend
+      headroom, training compute; Aircraft k=10 also LB at batch 1 (block K10-B1) with the H2/H2b rules; then the
+      k trend
   Q4  k=2 step-matched control (block S)
   Q2  imprinted vs random head at 50 epochs (blocks I, I-LB, I-K10) and at 10 epochs (block I10)
 """
@@ -26,7 +27,8 @@ from make_runlist import (CONFIG, SUPP_LR_FILE, SUPP_SEEDS, K2_ARMS, STEP_ARMS, 
 
 DATASETS = ['flowers102', 'aircraft']
 LISTS = ['main_flowers102.csv', 'main_aircraft.csv', 'pilot_aircraft.csv', 'lrx_aircraft.csv',
-         'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv', 'k10t2_aircraft.csv', 'imprint_extra.csv']
+         'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv', 'k10t2_aircraft.csv', 'imprint_extra.csv',
+         'k10b1_aircraft.csv']
 # T3 and T2 at k=10 are blocks K10-T3 and K10-T2 (Aircraft only), added after the K10 and K10-T3 results:
 # exploratory, outside the Holm family. An arm without runs (T3, T2 on Flowers) drops out of the block.
 K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: ['LB', 'T2', 'T3', 'T4', 'last']}
@@ -37,6 +39,9 @@ K_HEADROOM = {2: (128, 256), 5: (128, 256), 10: (128, 256)}
 IMPRINT_CELLS = {2: ['LB', 'T4', 'last'], 5: ['LB', 'T4', 'last'], 10: ['T4']}
 LATE_IMPRINT = {(2, 'LB'), (5, 'LB'), (10, 'T4')}
 EFFECT_MARGIN = 1.0  # pp, the "within +-1 pp" label for imprinting
+# LB at batch 1 per (dataset, k): block K10-B1, added after the K10 results; exploratory, read with the H2/H2b rules
+B1_CELLS = {('aircraft', 10)}
+CATASTROPHIC = 5  # pp, the H2 rule
 SEEDS = list(range(SUPP_SEEDS))  # seeds of the k=2, k=10, I and I10 blocks
 
 
@@ -52,9 +57,9 @@ def planned_names():
 PLANNED = planned_names()
 
 
-def get(dataset, k, arm, lr, seed, epochs=50, val_every=5, head_init='random'):
+def get(dataset, k, arm, lr, seed, epochs=50, val_every=5, head_init='random', batch=8):
     """The result of one planned run, or None if it is not in a run list or not finished."""
-    name = run_name(dataset, k, arm, 8, lr, seed, epochs, val_every, '', head_init)
+    name = run_name(dataset, k, arm, batch, lr, seed, epochs, val_every, '', head_init)
     path = ROOT / 'runs' / name / 'result.json'
     if name not in PLANNED or not path.exists():
         return None
@@ -169,9 +174,55 @@ def depth_block(dataset, k, lr, mem, macs):
         '%s %.1f T (%.2fx LB)' % (a, train_tmacs(macs, dataset, a, k, 50),
                                   train_tmacs(macs, dataset, a, k, 50) / train_tmacs(macs, dataset, 'LB', k, 50))
         for a in arms))
+    b1 = batch1(dataset, k, by, seeds, mem) if (dataset, k) in B1_CELLS else {}
     if 'LB' in arms and 'last' in arms:
-        purpose_metrics(by, seeds, {a: (a, 8) for a in arms}, mem, K_HEADROOM[k])
+        configs = {a: (a, 8) for a in arms}
+        if b1:
+            configs['LB-b1'] = ('LB', 1)
+        purpose_metrics({**by, **b1}, seeds, configs, mem, K_HEADROOM[k])
     return dict(by=by, seeds=seeds, res=res, holm=ok, arms=arms)
+
+
+def batch1(dataset, k, by, seeds, mem):
+    """LB at batch 1 (block K10-B1), paired with the batch-8 arms of the same k and seed; exploratory, no Holm."""
+    lr = CONFIG[dataset]['batch1_lr']
+    b1 = {}
+    for s in seeds:
+        r = get(dataset, k, 'LB', lr, s, batch=1)
+        if r is not None and ('LB', s) in by:
+            # LB-b1 freezes (and so quantizes) the same layers as LB-b8, so all three hashes must match
+            assert same_setup(r, by[('LB', s)]), 'seed %d: LB-b1 and LB-b8 are not paired' % s
+            b1[('LB-b1', s)] = r
+    if not b1:
+        return {}
+    rs = list(b1.values())
+    xs = [r['test_top1'] for r in rs]
+    print('batch 1 (block K10-B1: LB at lr %g; exploratory, no Holm): n=%d test %.2f +- %.2f  val %.2f  train %.1f  '
+          '%.1f MiB' % (lr, len(xs), mean(xs), stats.tstd(xs) if len(xs) > 1 else float('nan'),
+                        mean([r['final_val_top1'] for r in rs]), mean([r['final_train_top1'] for r in rs]),
+                        mem[('LB', 1)]['measured_MiB']))
+    both = {**by, **b1}
+    d, _ = paired(both, 'LB-b1', 'LB', seeds)
+    if len(d) >= 2:
+        c = ci(d)
+        primary = 'catastrophic' if c['U'] < -CATASTROPHIC else \
+            'not catastrophic' if c['L'] > -CATASTROPHIC else 'undetermined'
+        print('  H2  rule, LB-b1 - LB-b8: %s  per seed %s' % (fmt(c), ' '.join('%+.2f' % x for x in d)))
+        print('      %s (%g pp); %s' % (primary, CATASTROPHIC, 'within 2 pp' if c['L'] > -MARGIN else 'not shown within 2 pp'))
+    for a, tie in (('T4', 'tie (goes to T4)'), ('T3', 'tie')):
+        d, _ = paired(both, 'LB-b1', a, seeds)
+        if len(d) >= 2:
+            c = ci(d)
+            verdict = 'batch better' if c['L'] > 0 else 'depth better' if c['U'] < 0 else tie
+            print('  LB-b1 (%.1f MiB) - %s-b8 (%.1f MiB): %s -> %s%s' % (
+                mem[('LB', 1)]['measured_MiB'], a, mem[(a, 8)]['measured_MiB'], fmt(c), verdict,
+                ' (H2b rule)' if a == 'T4' else ''))
+    mins = lambda rows: mean([r['train_seconds'] for r in rows]) / 60
+    print('  training time per run (min, wall clock on our GPU): LB-b1 %.1f | LB-b8 %.1f | T4-b8 %.1f; GPU at the start '
+          'of the batch-1 runs: %s' % (
+              mins(rs), mins([by[('LB', s)] for _, s in b1]), mins([by[('T4', s)] for _, s in b1 if ('T4', s) in by]),
+              '; '.join(r['gpu_util_at_start'] for r in rs)))
+    return b1
 
 
 def trend(dataset, blocks):

@@ -23,6 +23,8 @@ Supplementary experiments (实验设计/补充实验设计.md):
                                       after the K10-T3 results; exploratory)
   python make_runlist.py imprint_extra runlists/imprint_extra.csv: blocks I-LB (LB imprinted, k=2 and 5) and I-K10
                                       (T4 imprinted, k=10), both datasets (added after the I results; exploratory)
+  python make_runlist.py k10b1        runlists/k10b1_aircraft.csv: block K10-B1, LB at batch 1 at k=10 on Aircraft
+                                      (added after the K10 results; exploratory)
 """
 import argparse
 import csv
@@ -246,7 +248,8 @@ def supp_rows():
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('what', choices=['smoke', 'pilot', 'freeze', 'main', 'batch1', 'lrcheck',
-                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3', 'k10t2', 'imprint_extra'])
+                                    'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3', 'k10t2', 'imprint_extra',
+                                    'k10b1'])
     p.add_argument('--dataset', default='flowers102', choices=sorted(CONFIG))
     p.add_argument('--drop_lr', type=float, default=None)
     p.add_argument('--n_seeds', type=int, default=None)
@@ -273,6 +276,10 @@ if __name__ == '__main__':
               [row('I-LB', ds, 'LB', lrs[ds]['LB'], s, k=k, head_init='imprint')
                for ds in CONFIG for k in (2, 5) for s in seeds] +
               [row('I-K10', ds, 'T4', lrs[ds]['T4'], s, k=10, head_init='imprint') for ds in CONFIG for s in seeds])
+    elif a.what == 'k10b1':
+        c = CONFIG['aircraft']
+        write(LISTS / 'k10b1_aircraft.csv',
+              [row('K10B1', 'aircraft', 'LB', c['batch1_lr'], s, k=10, batch=1) for s in range(SUPP_SEEDS)])
     elif a.what == 'smoke_supp':
         write(LISTS / 'smoke_supp.csv', [
             row('smoke', 'flowers102', 'LB', 8e-4, 0, k=10, epochs=1, val_every=1, tag='smoke4'),
