@@ -239,24 +239,32 @@ paired d = arm - LB on test (pp), margin 2
 shallowest cutoff that retains after Holm: none
 half-budget gain (val {45,50} - {20,25}, descriptive): LB 1.48 T2 1.26 T3 1.86 T4 1.72 last 3.64
 training compute (fwd+bwd MACs x images x epochs, excluding val/test): LB 42.7 T (1.00x LB) | T2 34.6 T (0.81x LB) | T3 31.1 T (0.73x LB) | T4 26.0 T (0.61x LB) | last 19.7 T (0.46x LB)
+batch 1 (block K10-B1: LB at lr 0.0003; exploratory, no Holm): n=5 test 39.54 +- 2.49  val 39.36  train 98.1  122.1 MiB
+  H2  rule, LB-b1 - LB-b8: n=5 d=+0.07 sd=2.11 93% CI [-2.25, +2.39]  per seed +1.92 +0.75 -3.51 +1.14 +0.03
+      not catastrophic (5 pp); not shown within 2 pp
+  LB-b1 (122.1 MiB) - T4-b8 (105.2 MiB): n=5 d=+3.42 sd=2.35 93% CI [+0.84, +6.00] -> batch better (H2b rule)
+  LB-b1 (122.1 MiB) - T3-b8 (168.6 MiB): n=5 d=+1.61 sd=2.09 93% CI [-0.68, +3.90] -> tie
+  training time per run (min, wall clock on our GPU): LB-b1 63.7 | LB-b8 14.5 | T4-b8 12.4; GPU at the start of the batch-1 runs: 29 %, 1845 MiB; 9 %, 1820 MiB; 2 %, 1594 MiB; 2 %, 1600 MiB; 2 %, 1628 MiB
 retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
   T2    n= 5 R  86.4% [ 80.0,  91.9]  (LB - last on these seeds: 10.27 pp)
   T3    n= 5 R  84.9% [ 78.4,  92.6]  (LB - last on these seeds: 10.27 pp)
   T4    n= 5 R  67.3% [ 64.7,  70.0]  (LB - last on these seeds: 10.27 pp)
+  LB-b1 n= 5 R 100.6% [ 82.8, 112.7]  (LB - last on these seeds: 10.27 pp)
 train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
   LB    n= 5 gap  58.7 +- 0.8 pp
   T2    n= 5 gap  60.1 +- 1.2 pp   vs LB +1.44 [+0.60, +2.27]
   T3    n= 5 gap  60.1 +- 1.4 pp   vs LB +1.41 [+0.51, +2.30]
   T4    n= 5 gap  61.2 +- 0.5 pp   vs LB +2.57 [+2.08, +3.07]
   last  n= 5 gap  52.1 +- 0.9 pp   vs LB -6.59 [-8.06, -5.12]
+  LB-b1 n= 5 gap  58.5 +- 2.2 pp   vs LB -0.15 [-1.85, +1.56]
 best configuration within a training-memory budget (measured PyTorch peak MiB; d = config - LB-b8, paired; "tied" = paired 93% CI of the difference to the best includes 0):
   <= 64 MiB  nothing fits (smallest: last at 67.4 MiB)
   <= 96 MiB  best last  ( 67.4 MiB) test 29.20, d -10.27 | tied: none | TinyTL fits as: nothing
-  <= 128 MiB best T4    (105.2 MiB) test 36.12, d -3.35 | tied: none | TinyTL fits as: nothing
-  <= 192 MiB best T3    (168.6 MiB) test 37.92, d -1.55 | tied: none | TinyTL fits as: nothing
-  <= 256 MiB best T2    (226.5 MiB) test 38.07, d -1.40 | tied: T3 | TinyTL fits as: nothing
-  <= 512 MiB best T2    (226.5 MiB) test 38.07, d -1.40 | tied: T3 | TinyTL fits as: nothing
-  no budget  best LB    (557.2 MiB) test 39.47, d +0.00 | tied: none | TinyTL fits as: LB (d +0.00)
+  <= 128 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: none | TinyTL fits as: LB-b1 (d +0.07)
+  <= 192 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T3 | TinyTL fits as: LB-b1 (d +0.07)
+  <= 256 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T2, T3 | TinyTL fits as: LB-b1 (d +0.07)
+  <= 512 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T2, T3 | TinyTL fits as: LB-b1 (d +0.07)
+  no budget  best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: LB, T2, T3 | TinyTL fits as: LB (d +0.00)
 cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
   <= 128 MiB  arms T4/last, n=5: per-seed oracle 36.12 | best fixed arm T4 36.12 | deepest-that-fits T4 36.12 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
   <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 38.15 | best fixed arm T2 38.07 | deepest-that-fits T2 38.07 | headroom over best fixed 0.07 pp, over deepest 0.07 pp | per-seed winners T2:4 T3:1
