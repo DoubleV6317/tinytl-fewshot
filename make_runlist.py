@@ -25,6 +25,9 @@ Supplementary experiments (实验设计/补充实验设计.md):
                                       (T4 imprinted, k=10), both datasets (added after the I results; exploratory)
   python make_runlist.py k10b1        runlists/k10b1_aircraft.csv: block K10-B1, LB at batch 1 at k=10 on Aircraft
                                       (added after the K10 results; exploratory)
+  python make_runlist.py n4           runlists/n4_blockselect.csv: block N4, the block sets frozen in blockselect.json
+                                      (FS per seed, random and imprinted head; C if it differs from FS), at the T4 LR
+  python make_runlist.py smoke_n4     runlists/smoke_n4.csv: 1-epoch runs of block-set arms
 """
 import argparse
 import csv
@@ -51,6 +54,7 @@ LISTS = ROOT / 'runlists'
 
 # 实验设计/补充实验设计.md
 SUPP_LR_FILE = ROOT / 'lr_choice_aircraft_supp.json'
+BLOCKSELECT = ROOT / 'blockselect.json'  # block N4, written once by blockselect.py
 LRX = dict(arms=['LB', 'T3'], lrs=[1e-4, 2e-4])
 SUPP_SEEDS = 5
 K2_ARMS, K10_ARMS, STEP_ARMS, IMPRINT_ARMS = ['LB', 'T3', 'T4', 'last'], ['LB', 'T4', 'last'], ['LB', 'T4', 'last'], \
@@ -249,7 +253,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('what', choices=['smoke', 'pilot', 'freeze', 'main', 'batch1', 'lrcheck',
                                     'lrx', 'lrx_freeze', 'supp', 'smoke_supp', 'k10t3', 'k10t2', 'imprint_extra',
-                                    'k10b1'])
+                                    'k10b1', 'n4', 'smoke_n4'])
     p.add_argument('--dataset', default='flowers102', choices=sorted(CONFIG))
     p.add_argument('--drop_lr', type=float, default=None)
     p.add_argument('--n_seeds', type=int, default=None)
@@ -280,6 +284,25 @@ if __name__ == '__main__':
         c = CONFIG['aircraft']
         write(LISTS / 'k10b1_aircraft.csv',
               [row('K10B1', 'aircraft', 'LB', c['batch1_lr'], s, k=10, batch=1) for s in range(SUPP_SEEDS)])
+    elif a.what == 'n4':
+        sel = json.loads(BLOCKSELECT.read_text(encoding='utf-8'))
+        seeds, c_arm = range(SUPP_SEEDS), sel['C']['arm']
+        fs = {(c['dataset'], c['k']): [c['seeds'][str(s)]['FS'] for s in seeds] for c in sel['cells']}
+        rows = []
+        for (ds, k), arms in fs.items():
+            lr = supp_lr(ds)['T4']
+            rows += [row('N4', ds, arms[s], lr, s, k=k) for s in seeds]
+            if any(x != c_arm for x in arms):
+                rows += [row('N4C', ds, c_arm, lr, s, k=k) for s in seeds]
+        rows += [row('N4', ds, arms[s], supp_lr(ds)['T4'], s, k=k, head_init='imprint')
+                 for (ds, k), arms in fs.items() for s in seeds]
+        seen = set()  # FS equal to C on a seed is one run
+        write(LISTS / 'n4_blockselect.csv', [r for r in rows if not (r['name'] in seen or seen.add(r['name']))])
+    elif a.what == 'smoke_n4':
+        write(LISTS / 'smoke_n4.csv', [
+            row('smoke', 'aircraft', 'S16-21', 4e-4, 0, k=10, epochs=1, val_every=1, tag='smoke5'),
+            row('smoke', 'flowers102', 'S15-17_19', 8e-4, 0, k=5, epochs=1, val_every=1, tag='smoke5',
+                head_init='imprint')])
     elif a.what == 'smoke_supp':
         write(LISTS / 'smoke_supp.csv', [
             row('smoke', 'flowers102', 'LB', 8e-4, 0, k=10, epochs=1, val_every=1, tag='smoke4'),

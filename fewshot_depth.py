@@ -26,7 +26,7 @@ import shutil
 import subprocess
 import time
 
-from depth_common import (ROOT, ARMS, HEAD_INITS, setup_paths, build_net, set_trainable, expected_trainable,
+from depth_common import (ROOT, HEAD_INITS, check_arm, setup_paths, build_net, set_trainable, expected_trainable,
                           run_name, sha1_tensors, quantize_frozen)
 
 DATASETS = {
@@ -170,7 +170,7 @@ def imprint(net, provider, data_root, classes, n_classes, k, smoothing):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--dataset', default='flowers102', choices=sorted(DATASETS))
-    p.add_argument('--arm', default='LB', choices=ARMS)
+    p.add_argument('--arm', default='LB', type=check_arm, help='a named arm or a block set (depth_common)')
     p.add_argument('--k', type=int, default=5)
     p.add_argument('--seed', type=int, default=0)
     p.add_argument('--batch', type=int, default=8)

@@ -7,6 +7,10 @@ An arm only decides which parameters receive gradients. Every arm keeps all lite
   B      all biases except lite_residual.final_bn.bias + classifier (lite residuals frozen). Upstream's tinytl-bias
          also trains those 19 final_bn biases (2,016 params); B is only used in the memory table.
   full   every parameter
+  S...   block set (block N4, 实验设计/补充实验设计.md): biases + lite residual of the listed blocks only, plus
+         feature-mix bias and classifier. Gradients still flow through every block after the earliest listed one.
+         Lite-residual blocks are 1, 2, 5-21; a set is named by its runs of consecutive lite blocks joined by '_',
+         e.g. S16-21 or S13_17-21, and a set equal to a T arm is that T arm (blockset_arm)
 Frozen conv/linear weights are 8-bit k-means quantized (quantize_frozen), so arms also differ in which layers are
 quantized, as in upstream.
 """
@@ -28,6 +32,18 @@ ARMS = ['last', 'T5', 'T4', 'T3', 'T2', 'T1', 'T0', 'LB', 'B', 'full', 'head']
 EXPECTED_102 = {'last': 130662, 'T5': 362598, 'T4': 1113126, 'T3': 1578246, 'T2': 1863766, 'T1': 1944182,
                 'T0': 1962230, 'LB': 1962310, 'B': 149622, 'full': 4746590, 'head': 131942}
 
+# Block-set arms: the blocks with a lite residual (block 0 has none; 3 and 4 are ZeroLayer) and the parameters each
+# one trains (its biases + lite residual, as in the T arms). The T arms add the feature-mix bias and the head.
+LITE_BLOCKS = [1, 2] + list(range(5, 22))
+BLOCK_PARAMS = {1: 3904, 2: 14144, 5: 14416, 6: 22000, 7: 22000, 8: 22000, 9: 23920, 10: 87200, 11: 87200,
+                12: 87200, 13: 88992, 14: 125376, 15: 125376, 16: 125376, 17: 135360, 18: 205824, 19: 204672,
+                20: 204672, 21: 230656}
+MIX_BIAS, HEAD_PER_CLASS = 1280, 1281
+T_ARMS = ['T5', 'T4', 'T3', 'T2', 'T1', 'T0']
+for _a in T_ARMS:
+    assert EXPECTED_102[_a] == sum(v for b, v in BLOCK_PARAMS.items() if b >= ARM_START[_a]) + MIX_BIAS + \
+        102 * HEAD_PER_CLASS, _a
+
 
 def setup_paths():
     os.environ.setdefault('TINYTL_CACHE', str(ROOT / 'cache'))
@@ -37,7 +53,52 @@ def setup_paths():
             sys.path.insert(0, str(p))
 
 
+def blockset_arm(blocks):
+    """Canonical arm of a set of lite-residual blocks: the T arm (or head) with the same parameters if there is one,
+    else S + the runs of consecutive lite blocks."""
+    bs = sorted(set(blocks))
+    assert all(b in BLOCK_PARAMS for b in bs), bs
+    if not bs:
+        return 'head'
+    for a in T_ARMS:
+        if bs == [b for b in LITE_BLOCKS if b >= ARM_START[a]]:
+            return a
+    pos, runs = {b: i for i, b in enumerate(LITE_BLOCKS)}, []
+    for b in bs:
+        if runs and pos[b] == pos[runs[-1][1]] + 1:
+            runs[-1][1] = b
+        else:
+            runs.append([b, b])
+    return 'S' + '_'.join(str(lo) if lo == hi else '%d-%d' % (lo, hi) for lo, hi in runs)
+
+
+def parse_blockset(arm):
+    """The sorted blocks of a block-set arm, or None if arm is not one; ValueError if it is not canonical."""
+    if not arm.startswith('S'):
+        return None
+    blocks = []
+    for part in arm[1:].split('_'):
+        m = re.fullmatch(r'(\d+)(?:-(\d+))?', part)
+        if not m:
+            raise ValueError('malformed block set %s' % arm)
+        lo, hi = int(m.group(1)), int(m.group(2) or m.group(1))
+        blocks += [b for b in LITE_BLOCKS if lo <= b <= hi]
+    if blockset_arm(blocks) != arm:
+        raise ValueError('%s is not the canonical name of its block set (%s)' % (arm, blockset_arm(blocks)))
+    return sorted(blocks)
+
+
+def check_arm(arm):
+    """argparse type: a named arm or a canonical block-set arm."""
+    if arm not in ARMS and parse_blockset(arm) is None:
+        raise ValueError('unknown arm %s' % arm)
+    return arm
+
+
 def expected_trainable(arm, n_classes):
+    blocks = parse_blockset(arm)
+    if blocks is not None:
+        return sum(BLOCK_PARAMS[b] for b in blocks) + MIX_BIAS + n_classes * HEAD_PER_CLASS
     return EXPECTED_102[arm] - (102 - n_classes) * 1281
 
 
@@ -137,10 +198,15 @@ def set_trainable(net, arm):
     """Set requires_grad for an arm and return the trainable parameter count."""
     from tinytl.utils import set_module_grad_status
     set_module_grad_status(net, arm == 'full')
-    if arm in ARM_START:
-        start, lite = ARM_START[arm], arm != 'B'
+    blocks = parse_blockset(arm)
+    if arm in ARM_START or blocks is not None:
+        if blocks is not None:
+            keep = lambda b: b in blocks or b == 10 ** 6  # the listed blocks, feature_mix_layer and the classifier
+        else:
+            keep = lambda b: b >= ARM_START[arm]
+        lite = arm != 'B'
         for name, p in net.named_parameters():
-            if block_index(name) < start:
+            if not keep(block_index(name)):
                 continue
             if name.endswith('.bias') and 'lite_residual.final_bn' not in name:
                 p.requires_grad = True

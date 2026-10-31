@@ -4,7 +4,7 @@ supplementary run. CPU only.
   python analyze_supp.py
 
 Runs are found through run lists only (main_*, pilot_aircraft, lrx_aircraft, lrrerun_aircraft, supp, k10t3_aircraft,
-k10t2_aircraft, imprint_extra, k10b1_aircraft).
+k10t2_aircraft, imprint_extra, k10b1_aircraft, n4_blockselect).
 Sections:
   Q3  Aircraft LR below the grid (block X); if an LR changed, the k=5 Aircraft block in Q1 uses the new LRs and is
       the sensitivity analysis of H1-A (block X-R)
@@ -13,6 +13,8 @@ Sections:
       k trend
   Q4  k=2 step-matched control (block S)
   Q2  imprinted vs random head at 50 epochs (blocks I, I-LB, I-K10) and at 10 epochs (block I10)
+  N4  block selection within the memory budget (block N4, blockselect.json): memory structure, the selected sets,
+      FS and C against T4, LB and each other, imprinting, and the purpose metrics with FS and C added
 """
 import csv
 import json
@@ -21,14 +23,14 @@ from scipy import stats
 
 from analyze_depth import (MARGIN, HOLM_ALPHA, HEADROOM_NOTE, ci, label, fmt, mean, memory, paired, check_pairing,
                            boot_ratio, purpose_metrics)
-from depth_common import ROOT, run_name
+from depth_common import ROOT, LITE_BLOCKS, ARM_START, run_name, parse_blockset
 from make_runlist import (CONFIG, SUPP_LR_FILE, SUPP_SEEDS, K2_ARMS, STEP_ARMS, STEP_EPOCHS, STEP_VAL_EVERY,
-                          SHORT_EPOCHS)
+                          SHORT_EPOCHS, BLOCKSELECT)
 
 DATASETS = ['flowers102', 'aircraft']
 LISTS = ['main_flowers102.csv', 'main_aircraft.csv', 'pilot_aircraft.csv', 'lrx_aircraft.csv',
          'lrrerun_aircraft.csv', 'supp.csv', 'k10t3_aircraft.csv', 'k10t2_aircraft.csv', 'imprint_extra.csv',
-         'k10b1_aircraft.csv']
+         'k10b1_aircraft.csv', 'n4_blockselect.csv']
 # T3 and T2 at k=10 are blocks K10-T3 and K10-T2 (Aircraft only), added after the K10 and K10-T3 results:
 # exploratory, outside the Holm family. An arm without runs (T3, T2 on Flowers) drops out of the block.
 K_ARMS = {2: K2_ARMS, 5: ['LB', 'T2', 'T3', 'T4', 'last'], 10: ['LB', 'T2', 'T3', 'T4', 'last']}
@@ -42,7 +44,7 @@ EFFECT_MARGIN = 1.0  # pp, the "within +-1 pp" label for imprinting
 # LB at batch 1 per (dataset, k): block K10-B1, added after the K10 results; exploratory, read with the H2/H2b rules
 B1_CELLS = {('aircraft', 10)}
 CATASTROPHIC = 5  # pp, the H2 rule
-SEEDS = list(range(SUPP_SEEDS))  # seeds of the k=2, k=10, I and I10 blocks
+SEEDS = list(range(SUPP_SEEDS))  # seeds of the k=2, k=10, I, I10 and N4 blocks
 
 
 def planned_names():
@@ -363,6 +365,127 @@ def imprint_block(dataset, lr, blocks, macs):
               macs[dataset]['T4']['fwd'] * 1e6 * 5 * (102 if dataset == 'flowers102' else 100) / 1e12))
 
 
+def verdict(c, better, worse, tie):
+    return better if c['L'] > 0 else worse if c['U'] < 0 else tie
+
+
+def blocks_of(arm):
+    b = parse_blockset(arm)
+    return set(b) if b is not None else {x for x in LITE_BLOCKS if x >= ARM_START[arm]}
+
+
+def n4(lr, blocks, mem):
+    """Block N4: block selection within the memory budget (blockselect.json); exploratory, no Holm."""
+    print('\n=== N4: task-adaptive block selection (block N4; exploratory, no Holm) ===')
+    if not BLOCKSELECT.exists():
+        print('blockselect.json not written yet')
+        return
+    sel = json.loads(BLOCKSELECT.read_text(encoding='utf-8'))
+    budget, c_arm, c_mib = sel['meta']['budget_MiB'], sel['C']['arm'], sel['C']['MiB']
+    print('memory structure (measured MiB, batch 8): every lite block from b on (at batch 1 in brackets) vs b alone')
+    for r in sel['structure']:
+        print('  block %2d: from here on %-7s %6.1f (b1 %5.1f) | alone %6.1f (%2.0f%% less)' % (
+            r['block'], r['contiguous'], r['contiguous_b8'], r['contiguous_b1'], r['alone_b8'],
+            100 * (1 - r['alone_b8'] / r['contiguous_b8'])))
+    print('C, the deepest contiguous cut within %d MiB: %s (%.1f MiB)' % (budget, c_arm, c_mib))
+    sets = {}
+    for cell in sel['cells']:
+        fs = {int(s): r['FS'] for s, r in cell['seeds'].items()}
+        sets[(cell['dataset'], cell['k'])] = fs
+        print('%s k=%d, FS per seed: %s' % (cell['dataset'], cell['k'], ' | '.join(
+            '%d %s %.1f MiB%s' % (s, a, cell['seeds'][str(s)]['FS_MiB'], ' (= C)' if a == c_arm else '')
+            for s, a in sorted(fs.items()))))
+    (ca, fa), (cb, fb) = list(sets.items())
+    common = sorted(set(fa) & set(fb))
+    jac = [len(blocks_of(fa[s]) & blocks_of(fb[s])) / len(blocks_of(fa[s]) | blocks_of(fb[s])) for s in common]
+    print('same seed, %s k=%d vs %s k=%d: Jaccard of the selected blocks %s; one set on every seed of both cells: %s'
+          % (ca[0], ca[1], cb[0], cb[1], ' '.join('%.2f' % j for j in jac),
+             'yes' if len(set(fa.values()) | set(fb.values())) == 1 else 'no'))
+    for cell in sel['cells']:
+        ds, k = cell['dataset'], cell['k']
+        fs_mib = max(r['FS_MiB'] for r in cell['seeds'].values())
+        n4_cell(ds, k, sets[(ds, k)], fs_mib, c_arm, c_mib, budget, lr[ds], blocks.get((ds, k)), mem)
+
+
+def n4_cell(ds, k, fs, fs_mib, c_arm, c_mib, budget, lr, base, mem):
+    print('\n--- N4 %s k=%d: FS and C at the T4 LR %g, seeds %s ---' % (ds, k, lr['T4'], SEEDS))
+    by = {key: r for key, r in base['by'].items() if key[1] in SEEDS} if base else {}
+    for s in SEEDS:
+        for cfg, arm, head in (('FS', fs[s], 'random'), ('C', c_arm, 'random'), ('FS-imp', fs[s], 'imprint'),
+                               ('T4-imp', 'T4', 'imprint')):
+            r = get(ds, k, arm, lr['T4'], s, head_init=head)
+            if r is not None:
+                by[(cfg, s)] = r
+        if (ds, k) in B1_CELLS:
+            r = get(ds, k, 'LB', CONFIG[ds]['batch1_lr'], s, batch=1)
+            if r is not None:
+                by[('LB-b1', s)] = r
+    if not any(a in ('FS', 'C', 'FS-imp') for a, _ in by):
+        print('  no N4 run finished yet')
+        return
+    configs = [a for a in ('LB', 'T2', 'T3', 'T4', 'FS', 'C', 'last', 'T4-imp', 'FS-imp', 'LB-b1')
+               if any((a, s) in by for s in SEEDS)]
+    for s in SEEDS:
+        present = [a for a in configs if (a, s) in by]
+        for key in ('subset_sha1', 'head_init_sha1'):  # the arms freeze (and so quantize) different layers
+            assert len({by[(a, s)][key] for a in present}) == 1, 'N4 %s k=%d seed %d: %s differs' % (ds, k, s, key)
+        if ('FS', s) in by and ('FS-imp', s) in by:
+            assert same_setup(by[('FS', s)], by[('FS-imp', s)]), 'N4 %s k=%d seed %d: FS-imp not paired' % (ds, k, s)
+    mib = {'FS': fs_mib, 'C': c_mib, 'FS-imp': fs_mib, 'T4-imp': mem[('T4', 8)]['measured_MiB'],
+           'LB-b1': mem[('LB', 1)]['measured_MiB']}
+    fs_name = fs[SEEDS[0]] if len(set(fs.values())) == 1 else 'per seed'
+    for a in configs:
+        rs = [by[(a, s)] for s in SEEDS if (a, s) in by]
+        xs = [r['test_top1'] for r in rs]
+        print('  %-6s n=%d test %6.2f +- %.2f  val %6.2f  train %5.1f  %6.1f MiB  %5.1f min/run%s' % (
+            a, len(xs), mean(xs), stats.tstd(xs) if len(xs) > 1 else float('nan'),
+            mean([r['final_val_top1'] for r in rs]), mean([r['final_train_top1'] for r in rs]),
+            mib[a] if a in mib else mem[(a, 8)]['measured_MiB'], mean([r['train_seconds'] for r in rs]) / 60,
+            {'FS': '  ' + fs_name, 'FS-imp': '  ' + fs_name, 'C': '  ' + c_arm}.get(a, '')))
+
+    def comp(a, b):
+        d, _ = paired(by, a, b, SEEDS)
+        return ci(d) if len(d) >= 2 else None
+
+    lines = [('FS - T4 (both within %d MiB)' % budget, 'FS', 'T4',
+              lambda c: verdict(c, 'selection better', 'fixed cutoff better', 'tie (goes to T4)'))]
+    if sum(fs[s] != c_arm for s in SEEDS) >= 2:
+        lines.append(('FS - C', 'FS', 'C', lambda c: verdict(c, 'Fisher better', 'contiguous better',
+                                                              'tie (goes to C)')))
+    lines += [('C - T4 (descriptive)', 'C', 'T4', lambda c: ''),
+              ('FS - LB', 'FS', 'LB', lambda c: label(c['L'], c['U'])),
+              ('C - LB', 'C', 'LB', lambda c: label(c['L'], c['U'])),
+              ('FS-imp - FS', 'FS-imp', 'FS', effect_label),
+              ('FS-imp - T4-imp', 'FS-imp', 'T4-imp',
+               lambda c: verdict(c, 'selection better', 'fixed cutoff better', 'tie (goes to T4)'))]
+    for text, a, b, read in lines:
+        c = comp(a, b)
+        if c is not None:
+            print('  %-28s %s  %s' % (text + ':', fmt(c), read(c)))
+
+    from measure_macs import count_macs
+    n_cls = 102 if ds == 'flowers102' else 100
+    arms = {'LB': 'LB', 'T4': 'T4', 'C': c_arm}
+    if fs_name != 'per seed':
+        arms['FS'] = fs_name
+    tm = {}
+    for a, arm in arms.items():
+        m = count_macs(arm, n_cls)
+        tm[a] = (m['fwd'] + m['bwd_total']) * k * n_cls * 50 / 1e12
+    print('  training compute (fwd+bwd MACs x images x epochs): %s' % ' | '.join(
+        '%s %.1f T (%.2fx LB)' % (a, t, t / tm['LB']) for a, t in tm.items()))
+
+    if all(sum((a, s) in by for s in SEEDS) >= 2 for a in ('LB', 'last', 'FS', 'C')):
+        pm = {a: (a, 8) for a in ('LB', 'T2', 'T3', 'T4', 'last') if a in configs}
+        pm.update({'FS': ('FS', 8), 'C': ('C', 8)})
+        if 'LB-b1' in configs:
+            pm['LB-b1'] = ('LB', 1)
+        mem2 = dict(mem)
+        mem2.update({('FS', 8): dict(measured_MiB=fs_mib), ('C', 8): dict(measured_MiB=c_mib)})
+        print('  purpose metrics on seeds %s with FS and C added:' % SEEDS)
+        purpose_metrics({key: r for key, r in by.items() if key[0] in pm}, SEEDS, pm, mem2, (budget,))
+
+
 def main():
     mem = memory()
     macs = json.loads((ROOT / 'macs_table.json').read_text(encoding='utf-8'))['table']
@@ -376,6 +499,7 @@ def main():
         trend(ds, blocks)
         step_control(ds, lr[ds])
         imprint_block(ds, lr[ds], blocks, macs)
+    n4(lr, blocks, mem)
     print('\n' + HEADROOM_NOTE)
 
 

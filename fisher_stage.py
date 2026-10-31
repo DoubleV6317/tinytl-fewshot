@@ -46,18 +46,18 @@ USEFUL_DEEPER = 0.7
 SMOKE_CLASSES = 20
 
 
-def support_set(dataset, seed, n_classes_limit=None):
+def support_set(dataset, seed, n_classes_limit=None, k=K):
     import torch
     from torchvision import datasets, transforms
     from fewshot_depth import data_roots
-    train_root, _ = data_roots(dataset, K, seed)
+    train_root, _ = data_roots(dataset, k, seed)
     tf = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(),
                              transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
     ds = datasets.ImageFolder(str(train_root / 'train'), tf)  # same class order as the upstream provider
     keep = [i for i, t in enumerate(ds.targets) if n_classes_limit is None or t < n_classes_limit]
     xs = torch.stack([ds[i][0] for i in keep])
     ys = torch.tensor([ds.targets[i] for i in keep])
-    assert torch.bincount(ys).tolist() == [K] * int(ys.max() + 1), 'not %d images per class' % K
+    assert torch.bincount(ys).tolist() == [k] * int(ys.max() + 1), 'not %d images per class' % k
     return xs, ys
 
 
