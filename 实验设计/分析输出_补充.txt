@@ -267,7 +267,9 @@ best configuration within a training-memory budget (measured PyTorch peak MiB; d
   no budget  best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: LB, T2, T3 | TinyTL fits as: LB (d +0.00)
 cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
   <= 128 MiB  arms T4/last, n=5: per-seed oracle 36.12 | best fixed arm T4 36.12 | deepest-that-fits T4 36.12 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
-  <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 38.15 | best fixed arm T2 38.07 | deepest-that-fits T2 38.07 | headroom over best fixed 0.07 pp, over deepest 0.07 pp | per-seed winners T2:4 T3:1
+  <= 256 MiB  arms T2/T3/T4/last, n=5: per-seed oracle 38.15 | best fixed arm T2 38.07 | deepest-that-fits T2 38.07 | headroom over best fixed 0.07 pp, over deepest 0.07 pp | per-seed winners T2:4 T3:1C:\Users\zhita\Documents\Codex\2026-09-10\this-class-will-feature-a-quarter\outputs\TinyTL\upstream\tinytl\tinytl\model\modules.py:73: UserWarning: `nn.functional.upsample` is deprecated. Use `nn.functional.interpolate` instead.
+  lite_residual_x = F.upsample(lite_residual_x, main_x.shape[2:],
+
 
 k trend for aircraft (descriptive):
   k   LB test        d_T4 [93% CI]          d_last [93% CI]        R_T4 [93% CI]       retains after Holm
@@ -298,5 +300,122 @@ k trend for aircraft (descriptive):
   T4-random-10 - LB-50: n=5 d=-5.36 sd=0.82 93% CI [-6.26, -4.47]  inferior by more than the margin (exploratory, no Holm)
   T4-imprint-10 - LB-50: n=5 d=-2.42 sd=0.92 93% CI [-3.44, -1.41]  significant loss, size unresolved (exploratory, no Holm)
   training compute: T4 at 10 epochs 2.6 T vs LB at 50 epochs 21.3 T (0.12x); imprinting adds one forward pass over the k-shot images (0.20 T)
+
+=== N4: task-adaptive block selection (block N4; exploratory, no Holm) ===
+memory structure (measured MiB, batch 8): every lite block from b on (at batch 1 in brackets) vs b alone
+  block  1: from here on T0       471.4 (b1 110.8) | alone  450.5 ( 4% less)
+  block  2: from here on S2-21    393.4 (b1 101.0) | alone  372.7 ( 5% less)
+  block  5: from here on T1       328.7 (b1  92.7) | alone  308.1 ( 6% less)
+  block  6: from here on S6-21    287.5 (b1  87.8) | alone  267.2 ( 7% less)
+  block  7: from here on S7-21    267.8 (b1  84.9) | alone  247.7 ( 8% less)
+  block  8: from here on S8-21    247.0 (b1  81.9) | alone  227.2 ( 8% less)
+  block  9: from here on T2       226.5 (b1  79.0) | alone  207.0 ( 9% less)
+  block 10: from here on S10-21   203.3 (b1  75.6) | alone  184.7 ( 9% less)
+  block 11: from here on S11-21   191.0 (b1  72.8) | alone  173.4 ( 9% less)
+  block 12: from here on S12-21   181.5 (b1  70.1) | alone  164.9 ( 9% less)
+  block 13: from here on T3       168.6 (b1  67.2) | alone  153.1 ( 9% less)
+  block 14: from here on S14-21   147.7 (b1  63.2) | alone  133.6 (10% less)
+  block 15: from here on S15-21   134.4 (b1  59.5) | alone  121.7 ( 9% less)
+  block 16: from here on S16-21   119.2 (b1  55.9) | alone  108.0 ( 9% less)
+  block 17: from here on T4       105.2 (b1  52.1) | alone   95.5 ( 9% less)
+  block 18: from here on S18-21    87.4 (b1  46.9) | alone   80.1 ( 8% less)
+  block 19: from here on S19-21    72.3 (b1  40.9) | alone   69.0 ( 5% less)
+  block 20: from here on S20-21    70.7 (b1  36.1) | alone   69.0 ( 2% less)
+  block 21: from here on T5        69.2 (b1  30.9) | alone   69.2 ( 0% less)
+C, the deepest contiguous cut within 128 MiB: S16-21 (119.2 MiB)
+aircraft k=10, FS per seed: 0 S15-17_19 127.1 MiB | 1 S15-17_19 127.1 MiB | 2 S15-17_19 127.1 MiB | 3 S15-17_19 127.1 MiB | 4 S15-17_19 127.1 MiB
+flowers102 k=5, FS per seed: 0 S15-17_19 127.1 MiB | 1 S15-17_19 127.1 MiB | 2 S15-17_19 127.1 MiB | 3 S15-17_19 127.1 MiB | 4 S15-17_19 127.1 MiB
+same seed, aircraft k=10 vs flowers102 k=5: Jaccard of the selected blocks 1.00 1.00 1.00 1.00 1.00; one set on every seed of both cells: yes
+
+--- N4 aircraft k=10: FS and C at the T4 LR 0.0004, seeds [0, 1, 2, 3, 4] ---
+  LB     n=5 test  39.47 +- 0.63  val  38.64  train  98.1   557.2 MiB   14.5 min/run
+  T2     n=5 test  38.07 +- 1.08  val  38.06  train  98.2   226.5 MiB   16.9 min/run
+  T3     n=5 test  37.92 +- 1.22  val  38.64  train  98.0   168.6 MiB   12.6 min/run
+  T4     n=5 test  36.12 +- 0.57  val  35.96  train  97.4   105.2 MiB   12.4 min/run
+  FS     n=5 test  36.18 +- 0.34  val  35.80  train  95.3   127.1 MiB   12.5 min/run  S15-17_19
+  C      n=5 test  37.32 +- 0.79  val  37.48  train  97.6   119.2 MiB   12.4 min/run  S16-21
+  last   n=5 test  29.20 +- 0.29  val  29.36  train  81.3    67.4 MiB   11.5 min/run
+  T4-imp n=5 test  36.44 +- 0.57  val  36.38  train  98.0   105.2 MiB   13.7 min/run
+  FS-imp n=5 test  36.17 +- 0.87  val  35.96  train  96.6   127.1 MiB   12.4 min/run  S15-17_19
+  LB-b1  n=5 test  39.54 +- 2.49  val  39.36  train  98.1   122.1 MiB   63.7 min/run
+  FS - T4 (both within 128 MiB): n=5 d=+0.06 sd=0.43 93% CI [-0.41, +0.53]  tie (goes to T4)
+  FS - C:                      n=5 d=-1.15 sd=0.65 93% CI [-1.86, -0.43]  contiguous better
+  C - T4 (descriptive):        n=5 d=+1.21 sd=0.29 93% CI [+0.89, +1.53]  
+  FS - LB:                     n=5 d=-3.29 sd=0.63 93% CI [-3.98, -2.61]  inferior by more than the margin
+  C - LB:                      n=5 d=-2.15 sd=0.52 93% CI [-2.72, -1.58]  significant loss, size unresolved
+  FS-imp - FS:                 n=5 d=-0.01 sd=0.60 93% CI [-0.66, +0.65]  within +-1 pp
+  FS-imp - T4-imp:             n=5 d=-0.26 sd=0.85 93% CI [-1.20, +0.67]  tie (goes to T4)
+  training compute (fwd+bwd MACs x images x epochs): LB 42.7 T (1.00x LB) | T4 26.0 T (0.61x LB) | C 27.3 T (0.64x LB) | FS 28.2 T (0.66x LB)
+  purpose metrics on seeds [0, 1, 2, 3, 4] with FS and C added:
+retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
+  T2    n= 5 R  86.4% [ 80.0,  91.9]  (LB - last on these seeds: 10.27 pp)
+  T3    n= 5 R  84.9% [ 78.4,  92.6]  (LB - last on these seeds: 10.27 pp)
+  T4    n= 5 R  67.3% [ 64.7,  70.0]  (LB - last on these seeds: 10.27 pp)
+  FS    n= 5 R  67.9% [ 64.3,  71.6]  (LB - last on these seeds: 10.27 pp)
+  C     n= 5 R  79.1% [ 75.2,  82.9]  (LB - last on these seeds: 10.27 pp)
+  LB-b1 n= 5 R 100.6% [ 82.8, 112.7]  (LB - last on these seeds: 10.27 pp)
+train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
+  LB    n= 5 gap  58.7 +- 0.8 pp
+  T2    n= 5 gap  60.1 +- 1.2 pp   vs LB +1.44 [+0.60, +2.27]
+  T3    n= 5 gap  60.1 +- 1.4 pp   vs LB +1.41 [+0.51, +2.30]
+  T4    n= 5 gap  61.2 +- 0.5 pp   vs LB +2.57 [+2.08, +3.07]
+  last  n= 5 gap  52.1 +- 0.9 pp   vs LB -6.59 [-8.06, -5.12]
+  FS    n= 5 gap  59.1 +- 0.6 pp   vs LB +0.47 [-0.28, +1.23]
+  C     n= 5 gap  60.3 +- 0.9 pp   vs LB +1.61 [+0.92, +2.30]
+  LB-b1 n= 5 gap  58.5 +- 2.2 pp   vs LB -0.15 [-1.85, +1.56]
+best configuration within a training-memory budget (measured PyTorch peak MiB; d = config - LB-b8, paired; "tied" = paired 93% CI of the difference to the best includes 0):
+  <= 64 MiB  nothing fits (smallest: last at 67.4 MiB)
+  <= 96 MiB  best last  ( 67.4 MiB) test 29.20, d -10.27 | tied: none | TinyTL fits as: nothing
+  <= 128 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: C | TinyTL fits as: LB-b1 (d +0.07)
+  <= 192 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T3, C | TinyTL fits as: LB-b1 (d +0.07)
+  <= 256 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T2, T3, C | TinyTL fits as: LB-b1 (d +0.07)
+  <= 512 MiB best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: T2, T3, C | TinyTL fits as: LB-b1 (d +0.07)
+  no budget  best LB-b1 (122.1 MiB) test 39.54, d +0.07 | tied: LB, T2, T3, C | TinyTL fits as: LB (d +0.00)
+cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
+  <= 128 MiB  arms T4/last, n=5: per-seed oracle 36.12 | best fixed arm T4 36.12 | deepest-that-fits T4 36.12 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
+
+--- N4 flowers102 k=5: FS and C at the T4 LR 0.0008, seeds [0, 1, 2, 3, 4] ---
+  LB     n=5 test  84.83 +- 0.65  val  87.06  train  99.8   557.2 MiB    5.9 min/run
+  T2     n=5 test  85.16 +- 0.51  val  87.39  train  99.8   226.5 MiB    5.2 min/run
+  T3     n=5 test  85.04 +- 0.38  val  88.08  train  99.9   168.6 MiB    4.9 min/run
+  T4     n=5 test  84.64 +- 0.31  val  87.41  train 100.0   105.2 MiB    4.5 min/run
+  FS     n=5 test  83.48 +- 0.49  val  86.22  train  99.8   127.1 MiB    4.1 min/run  S15-17_19
+  C      n=5 test  85.18 +- 0.45  val  87.92  train  99.9   119.2 MiB    4.1 min/run  S16-21
+  last   n=5 test  78.74 +- 0.48  val  81.78  train  99.8    67.4 MiB    4.0 min/run
+  T4-imp n=5 test  85.40 +- 0.32  val  87.76  train  99.9   105.2 MiB    4.0 min/run
+  FS-imp n=5 test  84.32 +- 0.57  val  86.76  train  99.9   127.1 MiB    4.1 min/run  S15-17_19
+  FS - T4 (both within 128 MiB): n=5 d=-1.15 sd=0.20 93% CI [-1.38, -0.93]  fixed cutoff better
+  FS - C:                      n=5 d=-1.69 sd=0.48 93% CI [-2.22, -1.17]  contiguous better
+  C - T4 (descriptive):        n=5 d=+0.54 sd=0.42 93% CI [+0.08, +1.00]  
+  FS - LB:                     n=5 d=-1.35 sd=0.43 93% CI [-1.82, -0.87]  retains
+  C - LB:                      n=5 d=+0.35 sd=0.58 93% CI [-0.29, +0.99]  retains
+  FS-imp - FS:                 n=5 d=+0.83 sd=0.54 93% CI [+0.24, +1.42]  imprint helps
+  FS-imp - T4-imp:             n=5 d=-1.09 sd=0.28 93% CI [-1.40, -0.78]  fixed cutoff better
+  training compute (fwd+bwd MACs x images x epochs): LB 21.8 T (1.00x LB) | T4 13.3 T (0.61x LB) | C 13.9 T (0.64x LB) | FS 14.4 T (0.66x LB)
+  purpose metrics on seeds [0, 1, 2, 3, 4] with FS and C added:
+retention R = (arm - last) / (LB - last) on test, paired seeds, bootstrap 93% CI over seeds:
+  T2    n= 5 R 105.3% [101.0, 109.9]  (LB - last on these seeds: 6.09 pp)
+  T3    n= 5 R 103.4% [ 97.7, 108.8]  (LB - last on these seeds: 6.09 pp)
+  T4    n= 5 R  96.8% [ 90.4, 103.3]  (LB - last on these seeds: 6.09 pp)
+  FS    n= 5 R  77.9% [ 73.3,  82.0]  (LB - last on these seeds: 6.09 pp)
+  C     n= 5 R 105.7% [ 98.7, 112.6]  (LB - last on these seeds: 6.09 pp)
+train - test gap (final-epoch train top-1 is logged in training mode: augmentation, dropout):
+  LB    n= 5 gap  15.0 +- 0.7 pp
+  T2    n= 5 gap  14.7 +- 0.5 pp   vs LB -0.33 [-0.73, +0.08]
+  T3    n= 5 gap  14.9 +- 0.5 pp   vs LB -0.13 [-0.55, +0.29]
+  T4    n= 5 gap  15.3 +- 0.3 pp   vs LB +0.31 [-0.28, +0.89]
+  last  n= 5 gap  21.1 +- 0.4 pp   vs LB +6.05 [+5.57, +6.53]
+  FS    n= 5 gap  16.4 +- 0.5 pp   vs LB +1.35 [+0.87, +1.82]
+  C     n= 5 gap  14.7 +- 0.4 pp   vs LB -0.27 [-0.93, +0.39]
+best configuration within a training-memory budget (measured PyTorch peak MiB; d = config - LB-b8, paired; "tied" = paired 93% CI of the difference to the best includes 0):
+  <= 64 MiB  nothing fits (smallest: last at 67.4 MiB)
+  <= 96 MiB  best last  ( 67.4 MiB) test 78.74, d -6.09 | tied: none | TinyTL fits as: nothing
+  <= 128 MiB best C     (119.2 MiB) test 85.18, d +0.35 | tied: none | TinyTL fits as: nothing
+  <= 192 MiB best C     (119.2 MiB) test 85.18, d +0.35 | tied: T3 | TinyTL fits as: nothing
+  <= 256 MiB best C     (119.2 MiB) test 85.18, d +0.35 | tied: T2, T3 | TinyTL fits as: nothing
+  <= 512 MiB best C     (119.2 MiB) test 85.18, d +0.35 | tied: T2, T3 | TinyTL fits as: nothing
+  no budget  best C     (119.2 MiB) test 85.18, d +0.35 | tied: LB, T2, T3 | TinyTL fits as: LB (d +0.00)
+cutoff-selection headroom (batch-8 cutoff arms only; seeds on which every feasible arm ran):
+  <= 128 MiB  arms T4/last, n=5: per-seed oracle 84.64 | best fixed arm T4 84.64 | deepest-that-fits T4 84.64 | headroom over best fixed 0.00 pp, over deepest 0.00 pp | per-seed winners T4:5
 
 (the per-seed oracle also profits from training noise, so the headrooms are upper bounds on what any task-adaptive cutoff rule could gain)
