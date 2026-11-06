@@ -36,8 +36,65 @@ Windows + Git Bash，RTX 3060 12GB，Python 3.12，PyTorch 2.5.1+cu124。依赖�
    补丁只做兼容修改（新版 scikit-learn、torchvision、Windows），详见 `README_开始复现.md`。
 
 2. 运行 `install-environment.cmd`，在 `.venv/` 里装好依赖。
-3. 运行 `.venv/Scripts/python.exe prepare.py`，下载 Flowers102 和预训练权重。
-4. Aircraft：把 `fgvc-aircraft-2013b.tar.gz` 放到 `data/aircraft_raw/`，再运行 `.venv/Scripts/python.exe prepare_aircraft.py`。
+3. 按下一节下载两个数据集和预训练权重。
+
+## 数据集
+
+两个数据集都不在仓库里，要从官方地址下载，使用时请遵守官网的条款。下载和处理完共占约 8 GB 硬盘空间。命令都在仓库根目录的 Git Bash 里运行。
+
+每次运行需要的 k-shot 子集（`fewshot/`、`fewshot_aircraft/`）会在运行时自动生成，不用手动准备。
+
+### Flowers102
+
+`prepare.py` 会下载数据集、检查 MD5、整理目录，再下载预训练权重：
+
+```bash
+.venv/Scripts/python.exe prepare.py
+```
+
+自动下载失败时，手动下载下面三个文件放到 `data/flowers102_raw/`，再运行一次 `prepare.py`。已经存在的文件会跳过。
+
+| 文件 | 字节数 |
+|---|---|
+| [`102flowers.tgz`](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/102flowers.tgz) | 344,862,509 |
+| [`imagelabels.mat`](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/imagelabels.mat) | 502 |
+| [`setid.mat`](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/setid.mat) | 14,989 |
+
+处理完 `data/flowers102/train/` 有 2,040 张图，是官方的 train 加 val；`data/flowers102/val/` 有 6,149 张图，是官方的 test。
+
+### FGVC-Aircraft
+
+这个数据集没有自动下载，用下面的命令：
+
+```bash
+mkdir -p data/aircraft_raw
+curl -L -C - -o data/aircraft_raw/fgvc-aircraft-2013b.tar.gz https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz
+sha256sum data/aircraft_raw/fgvc-aircraft-2013b.tar.gz
+.venv/Scripts/python.exe prepare_aircraft.py
+```
+
+压缩包有 2,753,340,328 字节，SHA-256 应该是 `e4e323d410e29f0370c81eabdcbb0e2b813acea1de22891b70b58ff41bfc9834`。下载中断时重新运行 `curl` 那一行，会接着下载。
+
+`prepare_aircraft.py` 会解压、裁掉每张图底部 20 像素的版权条，再把短边缩放到 512。处理完 `data/aircraft_prep/` 有 10,000 张图，划分记录在 `splits.json` 里。
+
+## 模型文件
+
+模型文件放在 [Release weights-v1](https://github.com/DoubleV6317/tinytl-fewshot/releases/tag/weights-v1) 里，不在 Git 历史里。每个压缩包都在仓库根目录解压。
+
+| 文件 | 内容 | 什么时候需要 |
+|---|---|---|
+| `pretrained-cache.tar.gz` | 预训练权重、网络配置和 8-bit 量化缓存，解压到 `cache/` | 官方地址下载不了，或者想省去第一次量化的时间 |
+| `trained-flowers102.tar.gz`、`trained-aircraft.tar.gz` | 每次运行最后一轮的可训练参数，解压到 `runs/<运行名>/final_trainable.pth` | 想看训练好的参数，不重新训练 |
+| `trained-earlier.tar.gz` | 2026-09 的全量复现、分辨率分配实验和协议桥用到的完整 checkpoint，解压到 `runs/` | 运行 `eval_final_ckpt.py`，或查看早期结果 |
+
+`prepare.py` 默认从 MIT Han Lab 的官方地址下载预训练权重。想用这里的镜像，就在运行 `prepare.py` 之前解压，文件已经存在时它不会再下载：
+
+```bash
+curl -L -O https://github.com/DoubleV6317/tinytl-fewshot/releases/download/weights-v1/pretrained-cache.tar.gz
+tar -xzf pretrained-cache.tar.gz
+```
+
+重新训练不需要 `trained-*` 这几个包，分析脚本也不需要，它们只读 `result.json`。`final_trainable.pth` 只保存可训练参数，要还原完整网络还需要 `pretrained-cache.tar.gz`。
 
 ## 运行
 
@@ -56,4 +113,4 @@ bash run-supp.sh       # 补充实验
 
 ## 不在仓库里
 
-数据集、预训练权重、训练得到的权重（`*.pth`）、每次运行的控制台日志（`logs/`、`runs/*/logs/`）、`.venv/`。每次运行只保留 `result.json`，分析脚本只读这些文件。
+数据集、每次运行的控制台日志（`logs/`、`runs/*/logs/`）、`.venv/`。预训练权重和训练得到的权重（`*.pth`）在上面的 Release 里，不在 Git 历史里。每次运行只保留 `result.json`，分析脚本只读这些文件。
